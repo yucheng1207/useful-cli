@@ -1,0 +1,22 @@
+{
+  "name": "useful-cli",
+  "version": "1.0.0",
+  "description": "A useful front-end scaffolding",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yucheng1207/useful-cli.git"
+  },
+  "keywords": [
+    "useful-cli"
+  ],
+  "author": "yucheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yucheng1207/useful-cli/issues"
+  },
+  "homepage": "https://github.com/yucheng1207/useful-cli#readme"
+}
