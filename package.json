@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A useful front-end scaffolding",
   "main": "index.js",
+  "bin": {
+    "useful-cli": "index.js"
+  },
   "scripts": {
     "test": "echo 1"
   },
@@ -14,9 +17,12 @@
     "useful-cli"
   ],
   "author": "yucheng1207",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/yucheng1207/useful-cli/issues"
   },
-  "homepage": "https://github.com/yucheng1207/useful-cli#readme"
+  "homepage": "https://github.com/yucheng1207/useful-cli#readme",
+  "dependencies": {
+    "commander": "^7.2.0"
+  }
 }
