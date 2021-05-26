@@ -1,10 +1,10 @@
 {
   "name": "useful-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A useful front-end scaffolding",
-  "main": "index.js",
+  "main": "src/index.js",
   "bin": {
-    "useful-cli": "index.js"
+    "useful-cli": "src/index.js"
   },
   "scripts": {
     "test": "echo 1"
@@ -23,6 +23,10 @@
   },
   "homepage": "https://github.com/yucheng1207/useful-cli#readme",
   "dependencies": {
-    "commander": "^7.2.0"
+    "chalk": "^4.1.1",
+    "commander": "^7.2.0",
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8.1.0",
+    "minimist": "^1.2.5"
   }
 }
