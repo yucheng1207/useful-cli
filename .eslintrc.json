@@ -11,7 +11,7 @@
     },
     "rules": {
         "no-console": "off",
-        "strict": 0,
+        "strict": "off",
         "curly": "warn"
     }
 }
