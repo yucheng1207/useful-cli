@@ -1,10 +1,9 @@
-
 const chalk = require('chalk');
 const fs = require('fs-extra');
 const path = require('path');
 const templateRoot = path.resolve('src/template-typescript/wechatMiniprogram');
 
-async function create(name, options) {
+async function create(name) {
     const root = path.resolve(name);
     try {
         // 如果不存在的话创建文件夹
@@ -16,18 +15,17 @@ async function create(name, options) {
             console.log(`Done.`);
         } else {
             console.log(chalk.red(`Folder ${name} is exist`));
-            process.exit(1)
+            process.exit(1);
         }
     } catch (error) {
         console.log(chalk.red(`Create miniprogram failed:`, error));
-        process.exit(1)
+        process.exit(1);
     }
-
 }
 
 module.exports = (...args) => {
-    return create(...args).catch(err => {
-        console.log(chalk.red('create wechat miniprogram failed:', err))
-        process.exit(1)
-    })
-}
+    return create(...args).catch((err) => {
+        console.log(chalk.red('create wechat miniprogram failed:', err));
+        process.exit(1);
+    });
+};
