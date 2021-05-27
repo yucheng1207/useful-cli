@@ -1,32 +1,33 @@
 {
-  "compilerOptions": {
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "module": "CommonJS",
-    "target": "ES5",
-    "allowJs": false,
-    "experimentalDecorators": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "alwaysStrict": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "strict": true,
-    "removeComments": true,
-    "pretty": true,
-    "strictPropertyInitialization": true,
-    "lib": ["es6"],
-    "typeRoots": [
-      "./typings"
-    ]
-  },
-  "include": [
-    "./**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "noImplicitAny": false,
+        "module": "CommonJS",
+        "target": "ES5",
+        "allowJs": false,
+        "experimentalDecorators": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "alwaysStrict": true,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": true,
+        "strict": true,
+        "removeComments": true,
+        "pretty": true,
+        "strictPropertyInitialization": true,
+        "lib": ["es6"],
+        "typeRoots": ["./typings"],
+        "baseUrl": "miniprogram",
+        "paths": {
+            "@pages/*": ["page/*"],
+            "@utils/*": ["utils/*"]
+        },
+        "plugins": [{ "transform": "typescript-transform-paths" }],
+        "outDir": "dist"
+    },
+    "include": ["./**/*.ts"],
+    "exclude": ["node_modules", "dist"]
 }
