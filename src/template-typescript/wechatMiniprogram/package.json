@@ -4,13 +4,21 @@
     "description": "",
     "scripts": {
         "compile": "./node_modules/typescript/bin/tsc",
-        "tsc": "ttsc"
+        "tsc": "ttsc",
+        "lint": "eslint miniprogram/**/*.ts",
+        "lint:fix": "eslint miniprogram/**/*.ts --fix"
     },
     "keywords": [],
     "author": "",
     "license": "",
     "dependencies": {},
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.25.0",
+        "@typescript-eslint/parser": "^4.25.0",
+        "eslint": "^7.27.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "husky": "^4.2.5",
         "miniprogram-api-typings": "^3.3.2",
         "ttypescript": "^1.5.12",
         "typescript": "^3.3.3333",
