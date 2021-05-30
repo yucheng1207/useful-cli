@@ -8,6 +8,11 @@
         "lint": "eslint miniprogram/**/*.ts",
         "lint:fix": "eslint miniprogram/**/*.ts --fix"
     },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn lint"
+        }
+    },
     "keywords": [],
     "author": "",
     "license": "",
