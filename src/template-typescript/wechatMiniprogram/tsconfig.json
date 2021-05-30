@@ -23,7 +23,8 @@
         "baseUrl": "miniprogram",
         "paths": {
             "@pages/*": ["page/*"],
-            "@utils/*": ["utils/*"]
+            "@utils/*": ["utils/*"],
+            "@npm/*": ["miniprogram_npm/*"]
         },
         "plugins": [{ "transform": "typescript-transform-paths" }],
         "outDir": "dist"

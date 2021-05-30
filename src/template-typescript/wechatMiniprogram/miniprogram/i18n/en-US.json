@@ -1,0 +1,6 @@
+{
+    "helloWorld": "Hello World",
+    "log": "{value} Log",
+    "login": "Login",
+    "toggle": "Toggle locale"
+}
