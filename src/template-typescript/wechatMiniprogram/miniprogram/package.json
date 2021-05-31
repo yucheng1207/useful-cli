@@ -9,6 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@miniprogram-i18n/core": "^1.0.0-rc.11"
+        "@miniprogram-i18n/core": "^1.0.0-rc.11",
+        "crypto-js": "^4.0.0"
     }
 }

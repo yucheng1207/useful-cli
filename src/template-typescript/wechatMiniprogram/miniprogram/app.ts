@@ -1,6 +1,13 @@
 // app.ts
-App<IAppOption>({
-    globalData: {},
+import { IGlobalData, initGlobalData } from 'store/globalData'
+interface IMiniAppOption {
+    globalData: IGlobalData
+    userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback
+}
+export type IMiniApp = WechatMiniprogram.App.Instance<IMiniAppOption>
+
+App<IMiniAppOption>({
+    globalData: initGlobalData(),
     onLaunch() {
         // 展示本地存储能力
         const logs = wx.getStorageSync('logs') || []

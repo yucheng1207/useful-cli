@@ -17,5 +17,6 @@ module.exports = {
         '@typescript-eslint/no-this-alias': 0,
         '@typescript-eslint/no-unused-vars': 0,
         '@typescript-eslint/no-var-requires': 0,
+        'no-fallthrough': 0,
     }, // 规则
 }
