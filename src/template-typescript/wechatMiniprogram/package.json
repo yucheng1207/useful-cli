@@ -5,6 +5,8 @@
     "scripts": {
         "tsc": "ttsc",
         "dev": "cross-env NODE_ENV=development gulp watch",
+        "build:test": "cross-env NODE_ENV=test gulp",
+        "build:prod": "cross-env NODE_ENV=production gulp",
         "clean": "rm -rf dist",
         "lint": "eslint miniprogram/**/*.ts",
         "lint:fix": "eslint miniprogram/**/*.ts --fix"
