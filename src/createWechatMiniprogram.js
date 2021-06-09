@@ -1,7 +1,9 @@
 const chalk = require('chalk');
 const fs = require('fs-extra');
 const path = require('path');
-const templateRoot = path.resolve('src/template-typescript/wechatMiniprogram');
+const templateRoot = path.resolve(
+    path.join(__dirname, 'template-typescript', 'wechatMiniprogram')
+);
 
 async function create(name) {
     const root = path.resolve(name);
