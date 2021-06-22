@@ -1,5 +1,6 @@
 {
     "authorizationFailedTip": "WeChat authorization failed",
+    "displayUserInfo": "Display user information",
     "helloWorld": "Hello World",
     "log": "{value} Log",
     "login": "Login",

@@ -1,5 +1,6 @@
 {
     "authorizationFailedTip": "微信授权失败",
+    "displayUserInfo": "展示用户信息",
     "helloWorld": "你好世界",
     "log": "{value}的日志",
     "login": "登录",
