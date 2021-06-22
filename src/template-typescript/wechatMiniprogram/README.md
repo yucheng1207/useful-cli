@@ -2,12 +2,12 @@
 
 小程序原生开发模板，集成了以下功能：
 
--   支持国际化
--   支持 typescript
--   支持 scss 预编译
--   支持设置环境变量
+-   支持`国际化`
+-   支持`typescript`
+-   支持`scss 预编译`
+-   支持`设置环境变量`
+-   支持`热更新`（执行 yarn dev 在文件被修改时会自动编译）
 -   使用 Promise 封装了 wx.request，并创建了一个 httpManager 单例
--   支持热更新（执行 yarn dev 在文件被修改时会自动编译）
 -   使用 eslint + prettier + husky 规范代码格式
 
 # Getting Started
@@ -166,6 +166,26 @@ import { ... } from 'miniprogram_npm/***'
 
 参考[这里](https://developers.weixin.qq.com/miniprogram/dev/extended/utils/miniprogram-i18n/quickstart.html)
 
+#### WXML 中的用法
+
+定义好 i18n 文本之后，就可以在直接 WXML 文件里使用了
+
+```
+<!-- pages/index/index.wxml -->
+<view>{{ t('helloWorld') }}</view>
+```
+
+#### JavaScript 中的用法
+
+miniprogram/utils/i18n 中封装了 message，可以直接使用
+
+```
+import { message, toggleLanguage } from '@utils/i18n'
+console.log(message('helloWorld'))
+toggleLanguage() // 切换语言
+console.log(message('helloWorld'))
+```
+
 Note：
 
 -   使用@miniprogram-i18n/core 前需要构建 npm
@@ -285,3 +305,9 @@ import { ... } from '@npm/***'
 // 或者
 import { ... } from 'miniprogram_npm/***'
 ```
+
+## Todos
+
+-   部署配置
+-   支持加载 svg
+-   引入 UI 库

@@ -1,4 +1,5 @@
 {
+    "authorizationFailedTip": "微信授权失败",
     "helloWorld": "你好世界",
     "log": "{value}的日志",
     "login": "登录",

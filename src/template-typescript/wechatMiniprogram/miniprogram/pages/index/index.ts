@@ -1,9 +1,9 @@
 // index.ts
 // 获取应用实例
-import { I18nPage } from '@miniprogram-i18n/core'
+import { toggleLanguage } from '@utils/i18n'
 const app = getApp<IAppOption>()
 
-I18nPage({
+Page({
     data: {
         userInfo: {},
         hasUserInfo: false,
@@ -49,6 +49,6 @@ I18nPage({
         })
     },
     changeLanguage() {
-        this.setLocale(this.getLocale() === 'zh-CN' ? 'en-US' : 'zh-CN')
+        toggleLanguage()
     },
 })

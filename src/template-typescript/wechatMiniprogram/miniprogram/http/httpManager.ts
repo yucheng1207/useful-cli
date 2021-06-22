@@ -26,6 +26,10 @@ export default class HttpManager {
         return this._httpManager
     }
 
+    /**
+     * 计算本地时间与服务器时间的误差
+     * @param serverTimestamp - 服务器时间
+     */
     public setTimeDiff(serverTimestamp: number) {
         const clientTimestamp = Date.now()
         this.timeDiff = serverTimestamp - clientTimestamp
@@ -91,32 +95,10 @@ export default class HttpManager {
         data?: Object
     ): Promise<any> {
         return new Promise((resolve, reject) => {
-            const timestamp = Date.now() + this.timeDiff
-            const nonce = getRandomChars(32)
-            const token = this.accessToken || ''
-            const strToSign = [
-                this.appId,
-                token,
-                method,
-                url,
-                data ? JSON.stringify(data) : '',
-                timestamp,
-                nonce,
-            ].join('\n')
-            const signature = CryptoJS.HmacSHA256(strToSign, 'My-App').toString(
-                CryptoJS.enc.Base64
-            )
             wx.request({
                 url: `${this.baseUrl}${url}`,
                 method,
                 data: data || '',
-                header: {
-                    'App-App-Id': this.appId,
-                    'App-Access-Token': token,
-                    'App-Signature': signature,
-                    'App-Timestamp': timestamp,
-                    'App-nonce': nonce,
-                },
                 success: (
                     response: WechatMiniprogram.RequestSuccessCallbackResult<IResponseData>
                 ) => {
