@@ -168,7 +168,26 @@ import { ... } from 'miniprogram_npm/***'
 
 #### WXML 中的用法
 
-定义好 i18n 文本之后，就可以在直接 WXML 文件里使用了
+1. 在 WXML 文件对应的 JavaScript 文件里引入国际化运行时。
+
+注意：这里建议 Page 以及 Component 都采用 Component 构造器进行定义，这样可以使用 I18n 这个 Behavior。如果需要在 Page 构造上使用 I18n 则需要引入 I18nPage 代替 Page 构造器。
+
+```
+<!-- pages/index/index.ts -->
+import { I18nPage } from '@miniprogram-i18n/core'
+I18nPage({
+  ...
+})
+
+或者
+
+import { I18n } from '@miniprogram-i18n/core'
+Component({
+  behaviors: [I18n]
+})
+```
+
+2. 在 WXML 中使用 t 函数（或其他你指定的函数名）来获取文本。
 
 ```
 <!-- pages/index/index.wxml -->
@@ -306,8 +325,101 @@ import { ... } from '@npm/***'
 import { ... } from 'miniprogram_npm/***'
 ```
 
+#### [小程序分包大小有限制](https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html)
+
+-   使用分包加载时，整个小程序所有分包大小不超过 20M
+-   单个分包/主包大小不能超过 2M
+    所以为了避免小程序体积过大，建议图片都放到 cdn，一些第三方依赖能后端处理就后端处理（如 ali-oss 获取签名 url 就可以让后端提供 api，这样小程序就不需要引入 ali-oss 依赖了）
+
+### 状态管理 - globalData
+
+由于小程序数据不会很复杂，且在小程序中 redux 对 ts 的支持不好，这里直接使用小程序自带的 globalData 来进行状态管理。
+
+1. `使用getApp()` 或者 `在App()函数内使用this` 可获取到小程序全局唯一的 App 实例。
+   注意：
+
+-   不要在定义于 [App()](https://developers.weixin.qq.com/miniprogram/dev/reference/api/getApp.html) 内的函数中，或调用 App()函数 前调用 getApp() ，使用 this 就可以拿到 app 实例。
+-   通过 getApp() 获取实例之后，不要私自调用生命周期函数。
+
+2. 直接获取 App 实例的 globalData 属性就可以设置全局属性了， 可以再 App()函数 中初始化 globalData
+
+```
+App<IMiniAppOption>({
+    globalData: {
+      test: '123'
+    },
+    onLaunch() {
+      this.globalData.test = '456'
+    }
+}
+```
+
+为了方便管理整个工程的全局属性，我们定义了一个单例 - StoreManager， 约定所有的 globalData 操作都通过 StoreManager 来执行
+
+```
+// storeManager.ts
+import { IMiniApp } from 'app'
+
+export interface IGlobalData {
+    test: string
+}
+
+export function initGlobalData() {
+    return {
+        test: '',
+    }
+}
+
+export default class StoreManager {
+    // StoreManager instance
+    private static _storeManager: StoreManager
+
+    private _app: IMiniApp
+
+    constructor(app?: IMiniApp) {
+        this._app = app || getApp()
+        if (!this._app) {
+            throw 'StoreManager Error: 获取app实例失败'
+        }
+    }
+
+    public static getInstance(app?: IMiniApp): StoreManager {
+        if (!this._storeManager) {
+            this._storeManager = new StoreManager(app)
+        }
+
+        return this._storeManager
+    }
+
+    public setTest(test) {
+        this._app.globalData.test = test
+    }
+
+    public getLogs() {
+        return this._app.globalData.test
+    }
+}
+
+
+// app.ts
+import StoreManager, { IGlobalData, initGlobalData } from 'store/storeManager'
+interface IMiniAppOption {
+    globalData: IGlobalData
+    userInfoReadyCallback?: WechatMiniprogram.GetUserInfoSuccessCallback
+}
+export type IMiniApp = WechatMiniprogram.App.Instance<IMiniAppOption>
+
+App<IMiniAppOption>({
+    globalData: initGlobalData(),
+    onLaunch() {
+        StoreManager.getInstance(this).initLogs()
+    }
+})
+```
+
 ## Todos
 
 -   部署配置
 -   支持加载 svg
 -   引入 UI 库
+-   分包加载配置

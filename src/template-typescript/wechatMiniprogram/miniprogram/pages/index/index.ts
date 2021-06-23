@@ -1,9 +1,12 @@
 // index.ts
 // 获取应用实例
+import { I18nPage } from '@miniprogram-i18n/core'
 import { message, toggleLanguage } from '@utils/i18n'
 const app = getApp<IAppOption>()
 
-Page({
+// 因为改page下的wxml使用了t函数，所以这里需要引入 I18nPage 代替 Page 构造器。
+// 当然也可以采用 Component 构造器进行定义，然后在 Component 中使用 I18n 这个 Behavior
+I18nPage({
     data: {
         userInfo: {},
         hasUserInfo: false,

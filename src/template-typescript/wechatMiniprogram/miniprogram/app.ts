@@ -1,5 +1,5 @@
 // app.ts
-import { IGlobalData, initGlobalData } from 'store/globalData'
+import StoreManager, { IGlobalData, initGlobalData } from 'store/storeManager'
 import { message } from './utils/i18n'
 interface IMiniAppOption {
     globalData: IGlobalData
@@ -10,10 +10,7 @@ export type IMiniApp = WechatMiniprogram.App.Instance<IMiniAppOption>
 App<IMiniAppOption>({
     globalData: initGlobalData(),
     onLaunch() {
-        // 展示本地存储能力
-        const logs = wx.getStorageSync('logs') || []
-        logs.unshift(Date.now())
-        wx.setStorageSync('logs', logs)
+        StoreManager.getInstance(this).initLogs()
 
         // 登录
         wx.login({
