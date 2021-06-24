@@ -417,6 +417,33 @@ App<IMiniAppOption>({
 })
 ```
 
+### 路由
+
+#### 路由配置
+
+在 app.json 文件的 pages 属性可以配置项目的路由
+
+#### 路由跳转
+
+使用 [wx.navigateTo](https://developers.weixin.qq.com/miniprogram/dev/api/route/wx.navigateTo.html)可以进行路由跳转，跳转 url 可以是相对路径，也可以是绝对路径("/pages/**/**")
+
+```
+    wx.navigateTo({
+        url: '../logs/logs',
+    })
+    或者
+    wx.navigateTo({
+        url: '/pages/logs/logs',
+    })
+```
+
+### UI 库 - [WeUI](https://developers.weixin.qq.com/miniprogram/dev/extended/weui/quickstart.html)
+
+#### 两种引入方式
+
+-   通过 useExtendedLib 扩展库 的方式引入，这种方式引入的组件将不会计入代码包大小。
+-   可以通过 npm 方式下载构建，npm 包名为 weui-miniprogram
+
 ## Todos
 
 -   部署配置
