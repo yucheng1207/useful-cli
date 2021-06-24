@@ -21,4 +21,7 @@
     <text class="user-motto">{{ t('helloWorld') }}</text>
     <button bindtap="changeLanguage">{{ t('toggle') }}</button>
   </view>
+  <mp-dialog title="{{t('toggle')}}" show="{{showDialog}}" bindbuttontap="tapDialogButton" buttons="{{[{text: t('english')}, {text: t('chinese')}]}}">
+      <view>{{ t('switchLanguageTip') }}</view>
+  </mp-dialog>
 </view>

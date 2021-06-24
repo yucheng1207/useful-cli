@@ -1,8 +1,11 @@
 {
     "authorizationFailedTip": "WeChat authorization failed",
+    "chinese": "Chinese",
     "displayUserInfo": "Display user information",
+    "english": "English",
     "helloWorld": "Hello World",
     "log": "{value} Log",
     "login": "Login",
+    "switchLanguageTip": "Please select the language to switch",
     "toggle": "Toggle locale"
 }

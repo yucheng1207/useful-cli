@@ -26,4 +26,11 @@ export const toggleLanguage = () => {
     i18n.setLocale(i18n.getLocale() === 'zh-CN' ? 'en-US' : 'zh-CN')
 }
 
+/**
+ * 设置语言
+ */
+export const setLanguage = (locale: 'zh-CN' | 'en-US') => {
+    i18n.setLocale(locale)
+}
+
 export default i18n

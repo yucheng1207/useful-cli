@@ -1,8 +1,11 @@
 {
     "authorizationFailedTip": "微信授权失败",
+    "chinese": "中文",
     "displayUserInfo": "展示用户信息",
+    "english": "英文",
     "helloWorld": "你好世界",
     "log": "{value}的日志",
     "login": "登录",
+    "switchLanguageTip": "请选择要切换的语言",
     "toggle": "切换语言"
 }

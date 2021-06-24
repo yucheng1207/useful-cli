@@ -439,14 +439,53 @@ App<IMiniAppOption>({
 
 ### UI 库 - [WeUI](https://developers.weixin.qq.com/miniprogram/dev/extended/weui/quickstart.html)
 
-#### 两种引入方式
+#### 有两种引入方式
 
--   通过 useExtendedLib 扩展库 的方式引入，这种方式引入的组件将不会计入代码包大小。
--   可以通过 npm 方式下载构建，npm 包名为 weui-miniprogram
+1. 通过 useExtendedLib 扩展库 的方式引入，这种方式引入的组件将不会计入代码包大小。
+2. 可以通过 npm 方式下载构建，npm 包名为 weui-miniprogram
+
+通过 useExtendedLib 扩展库 的方式引入组件将不会计入代码包，我们没有理由不用它。
+
+#### 使用
+
+1. 在 app.json 中配置 useExtendedLib
+
+```
+// app.json
+{
+  ...
+  "useExtendedLib": {
+    "weui": true
+  }
+  ...
+}
+```
+
+2. 在页面对应的 json 文件的 usingComponents 配置字段添加要使用的组件
+
+```
+// ***.json
+{
+  "usingComponents": {
+    "mp-dialog": "weui-miniprogram/dialog/dialog"
+  }
+}
+```
+
+3. 在对应页面的 wxml 中直接使用该组件
+
+```
+<mp-dialog title="test" show="{{true}}" bindbuttontap="tapDialogButton" buttons="{{[{text: '取消'}, {text: '确认'}]}}">
+    <view>test content</view>
+</mp-dialog>
+```
+
+#### 修改组件内部样式
+
+每个组件可以设置 ext-class 这个属性，该属性提供设置在组件 WXML 顶部元素的 class，组件的 addGlobalClass 的 options 都设置为 true，所以可以在页面设置 wxss 样式来覆盖组件的内部样式。需要注意的是，如果要覆盖组件内部样式，必须 wxss 的样式选择器的优先级比组件内部样式优先级高。 addGlobalClass 在基础库 2.2.3 开始支持。
 
 ## Todos
 
 -   部署配置
 -   支持加载 svg
--   引入 UI 库
 -   分包加载配置
