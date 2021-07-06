@@ -2,6 +2,8 @@
 
 一个有用的前端脚手架，支持创建 `微信小程序` 项目。
 
+> [掘金 blog](https://juejin.cn/post/6981631766406627364)
+
 ## 全局安装 useful-cli
 
 ```
@@ -101,4 +103,24 @@ console.log(argv);
 
 ### [commander](https://www.npmjs.com/package/commander)
 
-完整的 node.js 命令行解决方案。
+完整的 node.js 命令行解决方案。可用于配置命令具体处理函数
+
+```
+const { Command } = require('commander');
+const program = new Command();
+program
+    .command('create <app-name>')
+    .description(`Use ${chalk.green('useful-cli')} to create a new project`, {
+        'app-name': 'project name',
+    })
+    .action((appName, options) => {
+        if (minimist(process.argv.slice(3))._.length > 1) {
+            console.log(
+                chalk.yellow(
+                    "\n Info: You provided more than one argument. The first one will be used as the app's name, the rest are ignored."
+                )
+            );
+        }
+        ...
+    });
+```
