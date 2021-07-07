@@ -9,6 +9,7 @@
 -   支持`热更新`（执行 yarn dev 在文件被修改时会自动编译）
 -   使用 Promise 封装了 wx.request，并创建了一个 httpManager 单例
 -   使用 eslint + prettier + husky 规范代码格式
+-   引入了 weUI 库
 
 # Getting Started
 
@@ -212,9 +213,15 @@ Note：
 
 ### 配置 scss
 
-参考[这里](https://juejin.cn/post/6844903778496282632)
+scss 预编译配置十分简单，使用`gulp-sass`就可以了，唯一需要注意的是@import 的使用，如果使用 gulp-sass 解析@import，那么 sass 就会把 import 也打包到当前文件中，如果 import 的文件很大，超过单包代码限制 2M 就会有问题，比较经典的做法在编译前可以先把@import 语句注释掉，编译完成后再将@import 打开（wxss 是支持样式导入的，可以识别@import）。
 
-gulp 配置如下：
+但是注释掉@import 会导致无法在 sass 文件中去@import 一个变量申明(如$black)或@mixin 文件，因为 wxss 不支持这种写法。考虑到小程序的样式文件单包应该不会超过 2M，所以这里没有采用注释掉@import 的方法，而是直接使用`gulp-sass`去处理@import。
+
+具体实现步骤看下方的 gulp 配置（整体思路参考[这篇文章](https://juejin.cn/post/6844903778496282632)）。配置完支持以下几个功能：
+
+-   支持.scss 样式文件
+-   支持@import 和配置 alias（看下方的 styleAliases 配置）
+-   支持将 px 转为 rpx
 
 ```
 // gulpfile.js
@@ -228,7 +235,7 @@ const changed = require('gulp-changed'); // 检测改动
 const autoprefixer = require('autoprefixer'); //  自动添加前缀
 
 /**
- * 编译sass文件为wxss文件，需要注意的是sass中不能使用@mixin语法
+ * 编译sass文件为wxss文件
  * refrence: https://juejin.cn/post/6844903778496282632
  */
 function compileStyle() {
@@ -280,6 +287,16 @@ import ENV from 'env';
 console.log('当前环境变量', ENV)
 ```
 
+### 支持热更新
+
+开发过程中（使用 yarn dev）页面会在代码发生改变时重新加载。
+
+**实现思路：**由于我们已经将`project.config.json`的`miniprogramRoot`设置为`dist`了，只要 dist 中的文件发生改变，微信开发者工具就会重建加载代码。所以我们要做的是使用 gulp watch 功能去监听 miniprogram 中的文件是否发生改变，只要发生了改变就去更新 dist，达到热更新的效果。具体代码实现可以看[模板中的 gulpfile 配置](https://github.com/yucheng1207/useful-cli/blob/master/src/template-typescript/wechatMiniprogram/gulpfile.js)。
+
+```
+yarn dev // 执行yarn dev命令即可开启glup watch功能
+```
+
 ### 引入第三方依赖
 
 引入第三方依赖有两种方式：
@@ -297,7 +314,7 @@ console.log('当前环境变量', ENV)
 当我们需要引入 npm 包时，需要执行以下操作
 
 1. 修改 project.config.json
-   配置 project.config.json 的 setting.packNpmManually 为 true，开启自定义 node_modules 和 miniprogram_npm 位置的构建 npm 方式
+   配置 project.config.json 的 setting.packNpmManually 为 true，开启自定义配置 node_modules 和 miniprogram_npm 位置
    配置 project.config.json 的 setting.packNpmRelationList 项，指定 packageJsonPath 和 miniprogramNpmDistDir 的位置
 
 ```
@@ -341,7 +358,7 @@ import { ... } from 'miniprogram_npm/***'
 -   不要在定义于 [App()](https://developers.weixin.qq.com/miniprogram/dev/reference/api/getApp.html) 内的函数中，或调用 App()函数 前调用 getApp() ，使用 this 就可以拿到 app 实例。
 -   通过 getApp() 获取实例之后，不要私自调用生命周期函数。
 
-2. 直接获取 App 实例的 globalData 属性就可以设置全局属性了， 可以再 App()函数 中初始化 globalData
+2. 直接获取 App 实例的 globalData 属性就可以设置全局属性了， 可以在 App()函数 中初始化 globalData
 
 ```
 App<IMiniAppOption>({
