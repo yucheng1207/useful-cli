@@ -11,6 +11,10 @@
 -   使用 eslint + prettier + husky 规范代码格式
 -   引入了 weUI 库
 
+# Blog
+
+[微信小程序原生开发工程化解决方案](https://juejin.cn/post/6982378224399597604)
+
 # Getting Started
 
 ## 开发参考文档：
