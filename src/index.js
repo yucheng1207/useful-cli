@@ -5,7 +5,10 @@ const minimist = require('minimist');
 const commander = require('commander');
 const packageJson = require('../package.json');
 const program = new commander.Command(packageJson.name);
-const createWechatMiniprogram = require('./createWechatMiniprogram');
+const create = require('./create');
+const { createWechatMiniprogram, createReactApp } = create;
+// const createWechatMiniprogram = require('./createWechatMiniprogram');
+// const createReact = require('./createReact');
 
 program
     .version(packageJson.version, '-v, --version')
@@ -24,22 +27,28 @@ program
                 )
             );
         }
-        create(appName, options);
+        createApp(appName, options);
     });
 
-async function create(name, options) {
+async function createApp(name, options) {
     console.log('createApp', name, options);
     const { appType } = await inquirer.prompt([
         {
             name: 'appType',
             type: 'list',
             message: `Please select the type of project you want to create:`,
-            choices: [{ name: '微信小程序', value: 'wechat-miniprogram' }],
+            choices: [
+                { name: '微信小程序', value: 'wechat-miniprogram' },
+                { name: 'react-typescript', value: 'react-typescript' },
+            ],
         },
     ]);
     switch (appType) {
         case 'wechat-miniprogram':
             createWechatMiniprogram(name, options);
+            break;
+        case 'react-typescript':
+            createReactApp(name, options);
             break;
         default:
             console.log(chalk.red('unknow app type'));
