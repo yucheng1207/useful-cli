@@ -102,7 +102,7 @@ yarn build
 
 -   TBD
 
-## Note
+## 工程化配置
 
 ### 代码编写规范 - ESlint + prettier + husky
 
@@ -504,6 +504,73 @@ App<IMiniAppOption>({
 #### 修改组件内部样式
 
 每个组件可以设置 ext-class 这个属性，该属性提供设置在组件 WXML 顶部元素的 class，组件的 addGlobalClass 的 options 都设置为 true，所以可以在页面设置 wxss 样式来覆盖组件的内部样式。需要注意的是，如果要覆盖组件内部样式，必须 wxss 的样式选择器的优先级比组件内部样式优先级高。 addGlobalClass 在基础库 2.2.3 开始支持。
+
+## 开发笔记
+
+### [转发](https://developers.weixin.qq.com/minigame/dev/guide/open-ability/share/share.html)（发送给朋友）和[分享到朋友圈](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/share-timeline.html)
+
+> [分享到朋友圈](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/share-timeline.html)目前只有安卓手机支持
+
+#### 配置
+
+#### 方法一
+
+使用[wx.showShareMenu](https://developers.weixin.qq.com/minigame/dev/api/share/wx.showShareMenu.html)配置**当前页**可以被转发和分享朋友圈，注意是当前页，也就是说只要在需要转发或分享朋友圈中的 Page 下调用一下方法就可以实现转发或分享朋友圈功能，一般都在 page 的 onLoad 中调用
+
+```
+wx.showShareMenu({
+  withShareTicket: true,
+  menus: ['shareAppMessage', 'shareTimeline'],
+})
+```
+
+当然，也可以禁用转发或分享朋友圈功能
+
+```
+wx.hideShareMenu({
+  menus: ['shareAppMessage', 'shareTimeline'],
+})
+```
+
+> "shareAppMessage"表示“发送给朋友”按钮，"shareTimeline"表示“分享到朋友圈”按钮
+
+> 显示“分享到朋友圈”按钮时必须同时显示“发送给朋友”按钮，显示“发送给朋友”按钮时则允许不显示“分享到朋友圈”按钮
+
+一般来说只要调用了 showShareMenu 方法，当前页就可以被分享或转发了, 但是如果需要自定义标题和封面时可以设置 Page 中的[onShareAppMessage](https://developers.weixin.qq.com/miniprogram/dev/reference/api/Page.html#onShareAppMessage-Object-object)和[onShareTimeline](https://developers.weixin.qq.com/miniprogram/dev/reference/api/Page.html#onShareTimeline)
+
+```
+Page({
+  onShareAppMessage() {
+    return {
+      title: '自定义转发标题',
+      path: '/pages/index/index',
+    }
+  },
+  onShareTimeline: function () {
+    return {
+      title: '自定义转发标题',
+    }
+  },
+})
+
+// 转发前也支持做一些异步操作
+Page({
+  onShareAppMessage() {
+    const promise = new Promise(resolve => {
+      setTimeout(() => {
+        resolve({
+          title: '自定义转发标题'
+        })
+      }, 2000)
+    })
+    return {
+      title: '自定义转发标题',
+      path: '/pages/index/index',
+      promise
+    }
+  }
+})
+```
 
 ## Todos
 
