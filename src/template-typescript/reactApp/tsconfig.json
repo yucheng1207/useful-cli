@@ -1,26 +1,22 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "moduleResolution": "node",
+        "target": "es6",
+        "jsx": "react",
+        "strict": false,
+        "strictNullChecks": true,
+        "rootDir": "src",
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "skipDefaultLibCheck": true,
+        "lib": ["es6", "dom"],
+        "paths": {
+            // Fixes "Duplicate identifier 'Redux'" error when packages were installed via Yarn (by specifying which .d.ts file is authoritative)
+            "redux": ["./node_modules/@types/redux/index"]
+        }
+    },
+    "exclude": ["bin", "node_modules"]
 }
