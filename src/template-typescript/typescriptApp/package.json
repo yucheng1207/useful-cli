@@ -1,0 +1,37 @@
+{
+    "name": "useful-script",
+    "version": "1.0.0",
+    "description": "typescript项目",
+    "main": "index.js",
+    "scripts": {
+        "compile": "ttsc",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn lint"
+        }
+    },
+    "keywords": [
+        "useful-cli",
+        "build",
+        "deploy"
+    ],
+    "author": "",
+    "license": "",
+    "dependencies": {},
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.29.2",
+        "@typescript-eslint/parser": "^4.29.2",
+        "eslint": "^7.32.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "husky": "^4.2.5",
+        "prettier": "^2.3.2",
+        "ttypescript": "^1.5.12",
+        "typescript": "^4.3.5",
+        "typescript-transform-paths": "^3.3.1"
+    }
+}

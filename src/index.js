@@ -6,9 +6,7 @@ const commander = require('commander');
 const packageJson = require('../package.json');
 const program = new commander.Command(packageJson.name);
 const create = require('./create');
-const { createWechatMiniprogram, createReactApp } = create;
-// const createWechatMiniprogram = require('./createWechatMiniprogram');
-// const createReact = require('./createReact');
+const { createWechatMiniprogram, createReactApp, createTypescriptApp } = create;
 
 program
     .version(packageJson.version, '-v, --version')
@@ -40,6 +38,7 @@ async function createApp(name, options) {
             choices: [
                 { name: '微信小程序', value: 'wechat-miniprogram' },
                 { name: 'react-typescript', value: 'react-typescript' },
+                { name: 'typescript-app', value: 'typescript-app' },
             ],
         },
     ]);
@@ -49,6 +48,9 @@ async function createApp(name, options) {
             break;
         case 'react-typescript':
             createReactApp(name, options);
+            break;
+        case 'typescript-app':
+            createTypescriptApp(name, options);
             break;
         default:
             console.log(chalk.red('unknow app type'));

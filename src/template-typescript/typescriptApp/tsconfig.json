@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        /* refrence: https://www.tslang.cn/docs/handbook/compiler-options.html */
+        "target": "esnext",
+        "module": "commonjs",
+        "allowJs": true,
+        "outDir": "bld",
+        "rootDir": "src",
+        "strict": false,
+        "noImplicitAny": false,
+        "alwaysStrict": true,
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "plugins": [{ "transform": "typescript-transform-paths" }],
+        "baseUrl": "src", // 使用绝对路径时的基本目录，如要引用src/utils，可以是直接"import utils from "utils""
+        "paths": {
+            // 用于设置alias
+            "@utils/*": ["utils/*"] // utils别名， 使用：import utils from "@utils/index"
+        }
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+}

@@ -5,6 +5,9 @@ const templateRoot = {
     reactApp: path.resolve(
         path.join(__dirname, 'template-typescript', 'reactApp')
     ),
+    typescriptApp: path.resolve(
+        path.join(__dirname, 'template-typescript', 'typescriptApp')
+    ),
     wechatMiniprogram: path.resolve(
         path.join(__dirname, 'template-typescript', 'wechatMiniprogram')
     ),
@@ -34,12 +37,17 @@ async function createReactApp(name) {
     await createProject(name, templateRoot.reactApp);
 }
 
+async function createTypescriptApp(name) {
+    await createProject(name, templateRoot.typescriptApp);
+}
+
 async function createWechatMiniprogram(name) {
     await createProject(name, templateRoot.wechatMiniprogram);
 }
 
 module.exports = {
     createReactApp,
+    createTypescriptApp,
     createWechatMiniprogram,
 };
 
