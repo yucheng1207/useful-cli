@@ -2,13 +2,15 @@
 // https://cesium.com/docs/tutorials/cesium-and-webpack/
 
 'use strict';
-const path = require('path');
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
+const paths = require('./paths');
 
 const DEV = process.env.NODE_ENV === 'development';
 
@@ -18,25 +20,24 @@ module.exports = {
         ? {
               app: [
                   'react-hot-loader/patch',
-                  'webpack-dev-server/client?http://localhost:3000',
-                  path.resolve(__dirname, '..', 'src/boot-client.tsx'),
+                  `webpack-dev-server/client?http://localhost:${paths.port}`,
+                  paths.entryPath(),
               ],
           }
         : {
-              app: path.resolve(__dirname, '..', 'src/boot-client.tsx'),
+              app: paths.entryPath(),
           },
 
     resolve: {
         alias: {
-            src: path.resolve(__dirname, '..', 'src'),
+            src: paths.resolveApp('src'),
         },
-        // Add '.ts' and '.tsx' as resolvable extensions.
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     output: {
-        path: path.resolve(__dirname, '..', 'wwwroot/dist'),
+        path: paths.buildPath(),
         filename: 'app.bundle.js',
-        publicPath: DEV ? '/' : process.env.PUBLIC_URL || '',
+        publicPath: process.env.PUBLIC_URL || '',
     },
     amd: {
         // toUrlUndefined: true,
@@ -168,23 +169,23 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, '..', 'wwwroot/template.html'),
+            template: paths.htmlPath(),
             inject: true,
+        }),
+        new InterpolateHtmlPlugin({
+            PUBLIC_URL: process.env.PUBLIC_URL || '',
         }),
         new CopyWebpackPlugin([
             {
-                from: path.resolve(__dirname, '..', `src/images`),
-                to: 'images',
+                from: paths.publicPath(),
+                to: '.',
                 writeToDisk: true,
             },
         ]),
         new Dotenv({
-            path: path.resolve(
-                __dirname,
-                '..',
-                `env/${process.env.NODE_ENV}.env`
-            ),
+            path: paths.envPath(),
         }),
         new WriteFilePlugin(),
+        // new AntdDayjsWebpackPlugin(), // 将antd中的moment替换成dayjs：https://ant.design/docs/react/replace-moment-cn#antd-dayjs-webpack-plugin
     ],
 };

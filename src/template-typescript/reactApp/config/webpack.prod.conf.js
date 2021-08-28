@@ -1,18 +1,17 @@
 'use strict';
-const path = require('path');
-
 const baseWebpackConfig = require('./webpack.base.conf');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
+const paths = require('./paths');
 
 const webpackConfig = merge(baseWebpackConfig, {
     mode: 'production',
     output: {
-        path: path.resolve(__dirname, '..', 'wwwroot/dist'),
+        path: paths.buildPath(),
         filename: 'static/js/app.bundle.[hash].js',
         chunkFilename: 'static/js/[id].[chunkhash].js',
-        publicPath: process.env.PUBLIC_URL,
+        publicPath: process.env.PUBLIC_URL || '',
     },
     plugins: [
         ...baseWebpackConfig.plugins,
@@ -21,7 +20,8 @@ const webpackConfig = merge(baseWebpackConfig, {
             chunkFilename: 'static/css/[id].[chunkhash].css',
         }),
         new webpack.DefinePlugin({
-            'process.env.IGNORE_SENTRY': process.env.IGNORE_SENTRY,
+            // 添加自定义宏
+            // 'process.env.TEST': process.env.TEST,
         }),
     ],
     optimization: {
