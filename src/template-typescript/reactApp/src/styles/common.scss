@@ -1,0 +1,71 @@
+@mixin flexContainer(
+    $direction,
+    $justify-content: flex-start,
+    $align-items: center,
+    $flex-wrap: nowrap,
+    $align-content: flex-start
+) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justify-content;
+    align-items: $align-items;
+    flex-wrap: $flex-wrap;
+    // align-content只适用于多行的flex容器
+    align-content: $align-content;
+}
+
+@mixin label(
+    $fontSize,
+    $fontColor,
+    $lineHeight: normal,
+    $fontWeight: normal,
+    $font-family: $pingfang
+) {
+    font-family: $font-family;
+    font-size: $fontSize;
+    color: $fontColor;
+    line-height: $lineHeight;
+    font-weight: $fontWeight;
+}
+
+@mixin ellipsis() {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// -webkit-line-clamp 属性只有 WebKit 内核的浏览器才支持
+@mixin ellipsisMultipleLines($lineClamp) {
+    overflow: hidden;
+    display: -webkit-box;
+    word-wrap: break-word;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $lineClamp;
+}
+
+@mixin textWrap($word-break: break-all) {
+    word-wrap: break-word;
+    word-break: $word-break;
+}
+
+@mixin scrollBar($bar-width) {
+    /*定义滚动条样式（高宽及背景）*/
+    &::-webkit-scrollbar {
+        width: $bar-width;
+        height: $bar-width;
+    }
+
+    /*定义滚动条轨道（凹槽）样式*/
+    &::-webkit-scrollbar-track {
+        border-radius: 3px;
+    }
+
+    /*定义滑块 样式*/
+    &::-webkit-scrollbar-thumb {
+        z-index: 2;
+        border-radius: 3px;
+        background: rgba(149, 159, 166, 0.4);
+    }
+}

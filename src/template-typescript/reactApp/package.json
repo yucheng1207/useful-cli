@@ -11,7 +11,14 @@
     "scripts": {
         "dev": "./scripts/dev.sh",
         "clean": "rm -rf wwwroot/dist/**",
-        "build": "useful-scripts build reactapp test"
+        "build": "useful-scripts build reactapp test",
+        "lint": "eslint src/**/*.ts{,x}",
+        "lint:fix": "eslint src/**/*.ts{,x} --fix"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn lint"
+        }
     },
     "eslintConfig": {
         "extends": [
@@ -37,16 +44,31 @@
         "@testing-library/user-event": "^12.1.10",
         "@types/jest": "^26.0.15",
         "@types/node": "^12.0.0",
+        "@types/node-sass": "^4.11.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",
+        "@typescript-eslint/eslint-plugin": "^4.6.0",
+        "@typescript-eslint/parser": "^4.6.0",
         "antd-dayjs-webpack-plugin": "^1.0.6",
         "copy-webpack-plugin": "^5.1.1",
         "css-loader": "^3.5.2",
         "dotenv-webpack": "^7.0.3",
+        "eslint": "^7.12.1",
+        "eslint-config-prettier": "^6.15.0",
+        "eslint-config-react-app": "^6.0.0",
+        "eslint-plugin-flowtype": "^5.2.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-prettier": "^3.1.4",
+        "eslint-plugin-react": "^7.21.5",
+        "eslint-plugin-react-hooks": "^4.2.0",
         "file-loader": "^6.0.0",
         "html-webpack-plugin": "^4.2.0",
+        "husky": "^4.2.5",
         "interpolate-html-plugin": "^4.0.0",
         "mini-css-extract-plugin": "^0.9.0",
+        "node-sass": "^4.13.1",
+        "prettier": "^2.1.2",
         "react-hot-loader": "^4.12.20",
         "sass-loader": "^8.0.2",
         "style-loader": "^1.1.4",

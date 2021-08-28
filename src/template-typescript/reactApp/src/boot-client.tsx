@@ -1,11 +1,14 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import App from "./App/index";
+import { AppContainer } from "react-hot-loader";
+import App from "./components/App/index";
+import 'src/styles/app.scss';
 
-const render = () =>
-{
+const render = () => {
 	ReactDOM.render(
-		<App />,
+		<AppContainer>
+			<App />
+		</AppContainer>,
 		document.getElementById('react-app')
 	);
 }
