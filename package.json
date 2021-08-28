@@ -1,12 +1,15 @@
 {
     "name": "useful-cli",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "A useful front-end scaffolding",
     "main": "src/index.js",
     "bin": {
         "useful-cli": "src/index.js"
     },
     "scripts": {
+        "rmUselessFiles": "rm -rf src/template-typescript/*/node_modules src/template-typescript/*/bld",
+        "deploy": "yarn rmUselessFiles && ./scripts/tag_and_deploy",
+        "deployOnly": "yarn rmUselessFiles && npm adduser && npm publish",
         "lint": "eslint .",
         "test": "echo 1"
     },

@@ -4,22 +4,24 @@
 
 > [掘金 blog](https://juejin.cn/post/6981631766406627364)
 
-## 全局安装 useful-cli
-
-```
-    npm install useful-cli -g || yarn global add useful-cli
-```
-
 ## 查看当前版本
 
 ```
-    useful-cli -v
+    npx useful-cli -v
 ```
 
 ## 通过脚手架安装项目
 
 ```
-    useful-cli create <app-name>
+    npx useful-cli create <app-name>
+```
+
+## 发布流程
+
+将代码推到 github -> 删除项目中的依赖 & 打 tag -> 发布，执行`yarn deploy`带上部署描述即可
+
+```
+yarn deploy 'xxxxx'
 ```
 
 ## useful-cli 依赖介绍

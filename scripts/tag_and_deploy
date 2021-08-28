@@ -1,0 +1,6 @@
+APP_VERSION=`cat package.json | grep version | cut -d\" -f 4`
+git push
+git tag -a v$APP_VERSION -m "$1"
+git push origin --tags
+npm adduser
+npm publish
