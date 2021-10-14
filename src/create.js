@@ -3,13 +3,13 @@ const fs = require('fs-extra');
 const path = require('path');
 const templateRoot = {
     reactApp: path.resolve(
-        path.join(__dirname, 'template-typescript', 'reactApp')
+        path.join(__dirname, 'template-typescript', 'react-app')
     ),
     typescriptApp: path.resolve(
-        path.join(__dirname, 'template-typescript', 'typescriptApp')
+        path.join(__dirname, 'template-typescript', 'typescript-app')
     ),
     wechatMiniprogram: path.resolve(
-        path.join(__dirname, 'template-typescript', 'wechatMiniprogram')
+        path.join(__dirname, 'template-typescript', 'wechat-miniprogram')
     ),
 };
 

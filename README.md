@@ -67,8 +67,8 @@ path.resolve([...paths])：方法将路径或路径片段的序列解析为绝�
 path.join([...paths])：方法使用特定于平台的分隔符作为定界符将所有给定的 path 片段连接在一起，然后规范化生成的路径。
 path.resolve(__dirname)：返回被执行 js 文件的绝对路径
 path.resolve(
-    path.join(__dirname, 'template-typescript', 'wechatMiniprogram')
-) // 返回被执行路径下的template-typescript/wechatMiniprogram的绝对路径
+    path.join(__dirname, 'template-typescript', 'wechat-miniprogram')
+) // 返回被执行路径下的template-typescript/wechat-miniprogram的绝对路径
 ```
 
 ### [inquirer](https://www.npmjs.com/package/inquirer)

@@ -295,7 +295,7 @@ console.log('当前环境变量', ENV)
 
 开发过程中（使用 yarn dev）页面会在代码发生改变时重新加载。
 
-**实现思路：**由于我们已经将`project.config.json`的`miniprogramRoot`设置为`dist`了，只要 dist 中的文件发生改变，微信开发者工具就会重建加载代码。所以我们要做的是使用 gulp watch 功能去监听 miniprogram 中的文件是否发生改变，只要发生了改变就去更新 dist，达到热更新的效果。具体代码实现可以看[模板中的 gulpfile 配置](https://github.com/yucheng1207/useful-cli/blob/master/src/template-typescript/wechatMiniprogram/gulpfile.js)。
+**实现思路：**由于我们已经将`project.config.json`的`miniprogramRoot`设置为`dist`了，只要 dist 中的文件发生改变，微信开发者工具就会重建加载代码。所以我们要做的是使用 gulp watch 功能去监听 miniprogram 中的文件是否发生改变，只要发生了改变就去更新 dist，达到热更新的效果。具体代码实现可以看[模板中的 gulpfile 配置](https://github.com/yucheng1207/useful-cli/blob/master/src/template-typescript/wechat-miniprogram/gulpfile.js)。
 
 ```
 yarn dev // 执行yarn dev命令即可开启glup watch功能
