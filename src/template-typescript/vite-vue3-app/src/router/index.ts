@@ -4,6 +4,7 @@ import {
     RouteRecordRaw
 } from 'vue-router'
 import Home from '@/views/home.vue'
+import Vuex from '@/views/vuex.vue'
 import Test from '@/views/Test.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -16,6 +17,11 @@ const routes: Array<RouteRecordRaw> = [
         path: '/test',
         name: 'Test',
         component: Test
+    },
+    {
+        path: '/vuex',
+        name: 'Vuex',
+        component: Vuex
     },
 ]
 
