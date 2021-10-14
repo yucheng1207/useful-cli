@@ -1,0 +1,4 @@
+rm -rf src/template-typescript/*/node_modules
+rm -rf src/template-typescript/typescriptApp/bld
+rm -rf src/template-typescript/reactApp/build
+rm -rf src/template-typescript/wechatMiniprogram/dist

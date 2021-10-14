@@ -7,9 +7,8 @@
         "useful-cli": "src/index.js"
     },
     "scripts": {
-        "rmUselessFiles": "rm -rf src/template-typescript/*/node_modules src/template-typescript/*/bld",
-        "deploy": "yarn rmUselessFiles && ./scripts/tag_and_deploy",
-        "deployOnly": "yarn rmUselessFiles && npm adduser && npm publish",
+        "deploy": "./scripts/rm_useless_files && ./scripts/tag_and_deploy",
+        "deployOnly": "./scripts/rm_useless_files && npm adduser && npm publish",
         "lint": "eslint .",
         "test": "echo 1"
     },
