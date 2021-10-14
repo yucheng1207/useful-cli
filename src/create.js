@@ -5,6 +5,9 @@ const templateRoot = {
     reactApp: path.resolve(
         path.join(__dirname, 'template-typescript', 'react-app')
     ),
+    viteVue3App: path.resolve(
+        path.join(__dirname, 'template-typescript', 'vite-vue3-app')
+    ),
     typescriptApp: path.resolve(
         path.join(__dirname, 'template-typescript', 'typescript-app')
     ),
@@ -37,6 +40,10 @@ async function createReactApp(name) {
     await createProject(name, templateRoot.reactApp);
 }
 
+async function createViteVue3App(name) {
+    await createProject(name, templateRoot.viteVue3App);
+}
+
 async function createTypescriptApp(name) {
     await createProject(name, templateRoot.typescriptApp);
 }
@@ -47,6 +54,7 @@ async function createWechatMiniprogram(name) {
 
 module.exports = {
     createReactApp,
+    createViteVue3App,
     createTypescriptApp,
     createWechatMiniprogram,
 };
