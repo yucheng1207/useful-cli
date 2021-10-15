@@ -6,9 +6,7 @@
         <template #header>
           <div class="card-header">
             <span>Github</span>
-            <el-button class="button" type="text" @click="getUserInfo"
-              >点击获取信息
-            </el-button>
+            <el-button class="button" type="text" @click="getUserInfo">点击获取信息 </el-button>
           </div>
         </template>
         <div class="info-list-box" v-loading="loading">
@@ -56,9 +54,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-
 .axios-container {
-
   .user-info-container {
     display: flex;
     justify-content: center;
@@ -74,7 +70,6 @@ export default defineComponent({
       .item {
         margin-bottom: 18px;
       }
-
     }
 
     .card-header {
@@ -86,8 +81,6 @@ export default defineComponent({
     .box-card {
       width: 480px;
     }
-
   }
-
 }
 </style>

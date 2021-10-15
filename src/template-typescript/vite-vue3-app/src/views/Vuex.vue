@@ -21,10 +21,10 @@ export default defineComponent({
       // 在 computed 函数中访问 state
       count: computed(() => store.state.count),
       // 在 computed 函数中访问 getter
-      doubleCount: computed(() => store.getters.double),
+      doubleCount: computed(() => store.getters.double)
     })
 
-     // 使用 mutation
+    // 使用 mutation
     const increment = () => {
       store.commit('increment')
     }
@@ -44,7 +44,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  button {
-    margin: 0 8px;
-  }
+button {
+  margin: 0 8px;
+}
 </style>
