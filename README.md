@@ -18,7 +18,14 @@
 
 ## 发布流程
 
-将代码推到 github -> 删除项目中的依赖 & 打 tag -> 发布，执行`yarn deploy`带上部署描述即可
+1. 修改 package.json 版本号，并将代码 push 到 github
+
+```
+git commit -m "xxxxx"
+git push
+```
+
+2. 删除项目中的依赖，然后打 tag，最后执行 `npm publish` 进行发布，执行 `yarn deploy` 带上部署描述 将完成前面的这些操作
 
 ```
 yarn deploy 'xxxxx'
