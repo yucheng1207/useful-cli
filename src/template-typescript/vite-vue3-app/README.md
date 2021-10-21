@@ -39,7 +39,7 @@ npm i vue-router@4
 
 1. 编写 router.ts 文件
 
-```
+```javascript
 // src/router/index.ts
 import {
     createRouter,
@@ -72,7 +72,7 @@ export default router
 
 1. 在 main.ts 文件中挂载路由配置
 
-```
+```javascript
 import { createApp } from 'vue'
 import App from './App.vue'
 
@@ -83,7 +83,7 @@ createApp(App).use(router).mount('#app')
 
 1. 在 App.vue 中使用
 
-```
+```javascript
 <template>
   <router-view />
 </template>
@@ -102,7 +102,7 @@ npm i vuex@next
 
 1. 编写 store 文件
 
-```
+```javascript
 // src/store/index.ts
 import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
@@ -145,7 +145,7 @@ export default createStore<RootStateTypes>({
 
 1. 在 main.ts 文件中挂载 Vuex 配置
 
-```
+```javascript
 import { createApp } from 'vue'
 import App from './App.vue'
 
@@ -162,7 +162,7 @@ Vue 响应性 api：[https://v3.cn.vuejs.org/api/reactivity-api.html](https://v3
 
 在组件中通过调用 useStore 函数，来在 setup 钩子函数中访问 store：
 
-```
+```vue
 <template>
   <div class="vuex-container page-container">
     <div class="page-title">Vuex Test Page</div>
@@ -235,7 +235,7 @@ npm i element-plus
 
 方法一：在 main.ts 文件中
 
-```
+```javascript
 import { createApp } from 'vue'
 import App from './App.vue'
 
@@ -255,7 +255,7 @@ npm i vite-plugin-element-plus -D
 
 1. 配置 vite.config.ts
 
-```
+```javascript
 // vite.config.ts
 import importElementPlus from 'vite-plugin-element-plus'
 export default defineConfig({
@@ -267,7 +267,7 @@ export default defineConfig({
 
 1. 按需引入样式
 
-```
+```javascript
 // src/utils/styleImport
 import { App } from 'vue'
 import { ElIcon, ElLoading, ElCard, ElButton } from 'element-plus'
@@ -343,7 +343,7 @@ npm i prettier -D
 
 1. 在项目根目录下创建 `.prettierrc` 文件，具体配置可查看 [Prettier-Options](https://prettier.io/docs/en/options.html) 。
 
-```
+```json
 {
   "useTabs": false,
   "tabWidth": 2,
@@ -380,7 +380,7 @@ npm i eslint -D
 
 最终生成的 `.eslintrc.js` 文件，根据项目实际情况，如果我们有额外的 ESLint 规则，也在此文件中追加
 
-```
+```javascript
 module.exports = {
   env: {
     browser: true,
@@ -407,7 +407,7 @@ module.exports = {
 
 1. 配置 vscode 的 settings.json 文件
 
-```
+```json
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
@@ -436,7 +436,7 @@ npm i eslint-plugin-prettier eslint-config-prettier -D
 
 1. 在 `.eslintrc.js` 添加 prettier 插件
 
-```
+```javascript
 module.exports = {
   ...
   extends: [
@@ -463,7 +463,7 @@ npm i husky lint-staged -D
 
 1. 修改 package.json
 
-```
+```json
 {
   ...
   "scripts": {
