@@ -9,6 +9,7 @@ const create = require('./create');
 const {
     createWechatMiniprogram,
     createReactApp,
+    createVue3App,
     createViteVue3App,
     createTypescriptApp,
 } = create;
@@ -43,7 +44,8 @@ async function createApp(name, options) {
             choices: [
                 { name: '微信小程序', value: 'wechat-miniprogram' },
                 { name: 'react-ts', value: 'react-ts' },
-                { name: 'vite-vue3-ts', value: 'vite-vue3-ts' },
+                { name: 'vue3-ts(vite)', value: 'vite-vue3-ts' },
+                { name: 'vue3-ts(vue-cli)', value: 'vue3-ts' },
                 { name: 'typescript-app', value: 'typescript-app' },
             ],
         },
@@ -54,6 +56,9 @@ async function createApp(name, options) {
             break;
         case 'react-ts':
             createReactApp(name, options);
+            break;
+        case 'vue3-ts':
+            createVue3App(name, options);
             break;
         case 'vite-vue3-ts':
             createViteVue3App(name, options);
