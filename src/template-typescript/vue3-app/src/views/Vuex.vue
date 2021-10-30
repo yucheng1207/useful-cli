@@ -3,8 +3,8 @@
         <h1>This is an vuex test page</h1>
         <p>count: {{ count }}</p>
         <p>double: {{ double }}</p>
-        <button @click="increment">add</button>
-        <button @click="asyncIncrement">asyncAdd</button>
+        <el-button @click="increment">add</el-button>
+        <el-button @click="asyncIncrement">asyncAdd</el-button>
     </div>
 </template>
 

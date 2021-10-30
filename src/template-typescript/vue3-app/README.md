@@ -94,3 +94,52 @@ yarn lint
 
 [typescript官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
 [赋予Vuex 4.x 更好的 TypeScript体验](https://juejin.cn/post/6999886459343732772#heading-8)
+
+## Element-Plus
+
+### 方式一：全部引入
+```
+import { ElButton } from 'element-plus/lib/components';
+
+// 引入所有样式
+import 'element-plus/dist/index.css';
+
+app.use(ElButton)
+```
+
+### 方式二：手动引入样式
+```
+import { ElButton } from 'element-plus/lib/components';
+
+// 手动引入样式
+import 'element-plus/theme-chalk/base.css';
+import 'element-plus/theme-chalk/el-button.css';
+
+app.use(ElButton)
+```
+
+### 方式三：按需引入
+[官方教程](https://element-plus.gitee.io/zh-CN/guide/quickstart.html#on-demand-import)
+1. 安装`unplugin-vue-components`依赖
+```
+yarn add -D unplugin-vue-components
+```
+2. 配置webpack
+```
+// vue.config.js
+
+const Components = require('unplugin-vue-components/webpack');
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
+
+module.exports = {
+    configureWebpack: {
+        plugins: [
+            Components({
+                resolvers: [ElementPlusResolver()],
+            }),
+        ],
+    },
+};
+```
+
+这里我们使用方式三`按需加载`方式引入element-plus
