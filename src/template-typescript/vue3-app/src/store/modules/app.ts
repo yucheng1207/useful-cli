@@ -94,10 +94,11 @@ export type IAppActions = {
 const actions: ActionTree<IAppState, RootState> & IAppActions = {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     increment({ commit, state, getters, dispatch, rootGetters, rootState }) {
-        commit('app/increment', undefined);
+        commit(MutationTypes.increment, undefined);
     },
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     update({ commit, state, getters, dispatch, rootGetters, rootState }, data) {
-        commit('app/update', { data });
+        commit(MutationTypes.update, { data });
     },
 };
 

@@ -1,6 +1,5 @@
-/* eslint-disable */
+/* eslint-disable-next-line */
 import { ComponentCustomProperties } from 'vue';
-import { Store } from 'vuex';
 import { RootStore } from './store/index';
 
 /**
