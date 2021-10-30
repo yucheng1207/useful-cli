@@ -92,4 +92,5 @@ yarn lint
 
 ## Vuex
 
-[typescript 配置](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
+[typescript官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
+[赋予Vuex 4.x 更好的 TypeScript体验](https://juejin.cn/post/6999886459343732772#heading-8)
