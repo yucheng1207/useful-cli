@@ -10,9 +10,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { useStore } from 'vuex';
-import { key } from '../store';
-const store = useStore(key);
+import { useStore } from '@/store';
+const store = useStore();
 console.log(store);
 // 在 computed 函数中访问 state
 const count = computed(() => store.state.app.count);
@@ -20,10 +19,10 @@ const count = computed(() => store.state.app.count);
 const double = computed(() => store.getters['app/double']);
 
 const increment = () => {
-    store.commit('app/increment');
+    store.commit('app/increment', undefined);
 };
 
 const asyncIncrement = () => {
-    store.dispatch('app/increment');
+    store.dispatch('app/increment', undefined);
 };
 </script>

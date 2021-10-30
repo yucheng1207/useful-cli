@@ -1,36 +1,118 @@
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
-import { RootState } from '../index';
+import { RootState, RootMutations, RootActions, RootGetters } from '../index';
+import {
+    IStore,
+    ICommit,
+    IDispatch,
+    IActionContext,
+    GettersReturnType,
+} from '../type';
 export const moduleName = 'app';
+type IModuleName = typeof moduleName;
 // 存储应用公用state
-export interface AppState {
+
+/**
+ * 定义 state
+ */
+export interface IAppState {
     count: number;
 }
 
-const state: AppState = {
+const state: IAppState = {
     count: 0,
 };
 
-const getters: GetterTree<AppState, RootState> = {
-    /* eslint-disable @typescript-eslint/no-unused-vars */
+/**
+ * 定义 getters
+ */
+
+const GettersTypes = {
+    double: 'double',
+} as const;
+type VGettersTypes = typeof GettersTypes[keyof typeof GettersTypes];
+
+export type IAppGetters = {
+    readonly [key in VGettersTypes]: (
+        state: IAppState,
+        getters: GettersReturnType<IAppGetters, key>,
+        rootState: RootState,
+        rootGetters: RootGetters
+    ) => key extends typeof GettersTypes.double ? number : any;
+};
+
+const getters: GetterTree<IAppState, RootState> & IAppGetters = {
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     double(state, getters, rootState) {
         return 2 * state.count;
     },
 };
 
-const mutations: MutationTree<AppState> = {
+/**
+ * 定义 mutation
+ */
+const MutationTypes = {
+    increment: 'increment',
+    update: 'update',
+} as const;
+export type IAppMutations = {
+    [MutationTypes.increment](state: IAppState): void;
+    [MutationTypes.update]<T extends { data: number }>(
+        state: IAppState,
+        payload: T
+    ): void;
+};
+const mutations: MutationTree<IAppState> & IAppMutations = {
     increment(state) {
         state.count++;
     },
-};
-
-const actions: ActionTree<AppState, RootState> = {
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    increment({ state, commit, rootState }) {
-        commit('increment');
+    update(state, { data }) {
+        state.count = data;
     },
 };
 
-const appStore: Module<AppState, RootState> = {
+/**
+ * 定义 actions
+ */
+export const ActionTypes = {
+    increment: 'increment',
+    update: 'update',
+} as const;
+type IAppActionContext = IActionContext<
+    IAppState,
+    RootState,
+    IAppActions,
+    RootActions,
+    IAppMutations,
+    RootMutations,
+    IAppGetters,
+    RootGetters
+>;
+export type IAppActions = {
+    [ActionTypes.increment]: (context: IAppActionContext) => void;
+    [ActionTypes.update]: (context: IAppActionContext, payload: number) => void;
+};
+const actions: ActionTree<IAppState, RootState> & IAppActions = {
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    increment({ commit, state, getters, dispatch, rootGetters, rootState }) {
+        commit('app/increment', undefined);
+    },
+    update({ commit, state, getters, dispatch, rootGetters, rootState }, data) {
+        commit('app/update', { data });
+    },
+};
+
+export type IAppStore = IStore<
+    { [moduleName]: IAppState },
+    ICommit<IAppMutations, RootMutations, true>,
+    IDispatch<IAppActions, RootActions, true>,
+    {
+        [key in keyof IAppGetters as `${IModuleName}/${key}`]: ReturnType<
+            IAppGetters[key]
+        >;
+    }
+>;
+
+const appStore: Module<IAppState, RootState> = {
     namespaced: true, // 带命名空间的模块
     state,
     getters,
