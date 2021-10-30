@@ -19,19 +19,19 @@ export default defineComponent({
     const store = useStore()
     const reactiveData = reactive({
       // 在 computed 函数中访问 state
-      count: computed(() => store.state.count),
+      count: computed(() => store.state.app.count),
       // 在 computed 函数中访问 getter
-      doubleCount: computed(() => store.getters.double)
+      doubleCount: computed(() => store.getters['app/double'])
     })
 
     // 使用 mutation
     const increment = () => {
-      store.commit('increment')
+      store.commit('app/increment', undefined)
     }
 
     // 使用 action
     const asyncIncrement = () => {
-      store.dispatch('increment')
+      store.dispatch('app/increment', undefined)
     }
 
     return {

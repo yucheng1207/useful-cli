@@ -35,6 +35,10 @@ module.exports = {
         props: true,
         ignorePropertyModificationsFor: ['state', 'config']
       }
-    ]
+    ],
+    'no-shadow': 'off',
+    'no-unused-vars': 'off',
+    'no-use-before-define': 'off',
+    'symbol-description': 'off'
   }
 }

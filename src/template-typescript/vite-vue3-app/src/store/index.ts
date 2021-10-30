@@ -1,37 +1,43 @@
 import { InjectionKey } from 'vue'
-import { createStore, Store, useStore as baseUseStore } from 'vuex'
+import { createStore, createLogger, useStore as baseUseStore, Store } from 'vuex'
+import appStore, { IAppState, IAppActions, IAppGetters } from './modules/app'
+import { RootGettersReturnType } from './type'
+import { moduleName as appModuleName, IAppMutations, IAppStore } from '@/store/modules/app'
 
-const defaultState = {
-  count: 0
+const debug = process.env.NODE_ENV !== 'production'
+
+// 为 store state 声明类型
+// https://next.vuex.vuejs.org/guide/typescript-support.html#typing-store-property-in-vue-component
+// 参考：[赋予Vuex 4.x 更好的 TypeScript体验](https://juejin.cn/post/6999886459343732772#comment)
+export interface RootState {
+  [appModuleName]: IAppState
 }
 
-interface RootStateTypes {
-  count: number
+export type RootMutations = {
+  [appModuleName]: IAppMutations
 }
 
-export const key: InjectionKey<Store<RootStateTypes>> = Symbol('vue-store')
-export function useStore<T = RootStateTypes>() {
-  return baseUseStore<T>(key)
+export type RootActions = {
+  [appModuleName]: IAppActions
 }
 
-// Create a new store instance.
-export default createStore<RootStateTypes>({
-  state() {
-    return defaultState
-  },
-  mutations: {
-    increment(state: typeof defaultState) {
-      state.count++
-    }
-  },
-  actions: {
-    increment(context) {
-      context.commit('increment')
-    }
-  },
-  getters: {
-    double(state: typeof defaultState) {
-      return 2 * state.count
-    }
+type IAppGettersType = RootGettersReturnType<IAppGetters, typeof appModuleName>
+export type RootGetters = IAppGettersType
+
+export type RootStore = IAppStore
+
+// 定义 injection key
+export const key: InjectionKey<Store<RootState>> = Symbol()
+
+// 定义自己的 `useStore` 组合式函数
+export function useStore(): RootStore {
+  return baseUseStore(key)
+}
+
+export default createStore({
+  strict: debug,
+  plugins: debug ? [createLogger()] : [],
+  modules: {
+    [appModuleName]: appStore
   }
 })

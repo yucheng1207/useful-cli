@@ -221,6 +221,10 @@ import store, { key } from '@/store/index'
 createApp(App).use(router).use(store, key).mount('#app')
 ```
 
+为了让vuex更好的支持类型检查，参考以下文章进一步优化vuex的配置
+[typescript官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
+[赋予Vuex 4.x 更好的 TypeScript体验](https://juejin.cn/post/6999886459343732772#heading-8)
+
 ## 集成 UI 框架 Element Plus
 
 1. 安装 element plus
