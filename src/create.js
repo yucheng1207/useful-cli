@@ -17,6 +17,22 @@ const templateRoot = {
     wechatMiniprogram: path.resolve(
         path.join(__dirname, 'template-typescript', 'wechat-miniprogram')
     ),
+    electronMainApp: path.resolve(
+        path.join(
+            __dirname,
+            'template-typescript',
+            'electron-app',
+            'electron-main-app'
+        )
+    ),
+    electronRenderApp: path.resolve(
+        path.join(
+            __dirname,
+            'template-typescript',
+            'electron-app',
+            'electron-render-app'
+        )
+    ),
 };
 
 async function createProject(name, templateRoot) {
@@ -59,12 +75,17 @@ async function createWechatMiniprogram(name) {
     await createProject(name, templateRoot.wechatMiniprogram);
 }
 
+async function createElectronMainApp(name) {
+    await createProject(name, templateRoot);
+}
+
 module.exports = {
     createReactApp,
     createVue3App,
     createViteVue3App,
     createTypescriptApp,
     createWechatMiniprogram,
+    createElectronMainApp,
 };
 
 // module.exports = (...args) => {

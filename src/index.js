@@ -12,6 +12,7 @@ const {
     createVue3App,
     createViteVue3App,
     createTypescriptApp,
+    createElectronMainApp,
 } = create;
 
 program
@@ -47,6 +48,7 @@ async function createApp(name, options) {
                 { name: 'vue3-ts(vite)', value: 'vite-vue3-ts' },
                 { name: 'vue3-ts(vue-cli)', value: 'vue3-ts' },
                 { name: 'typescript-app', value: 'typescript-app' },
+                { name: 'electron-main-app', value: 'electron-main-app' },
             ],
         },
     ]);
@@ -65,6 +67,9 @@ async function createApp(name, options) {
             break;
         case 'typescript-app':
             createTypescriptApp(name, options);
+            break;
+        case 'electron-main-app':
+            createElectronMainApp(name, options);
             break;
         default:
             console.log(chalk.red('unknow app type'));
