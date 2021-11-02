@@ -67,3 +67,50 @@ APP_NAME=electron_app
 ```javascript
 console.log(process.env.APP_NAME); // 输出：electron_app
 ```
+
+## 配置 alias
+
+由于使用 typescript 编译后无法正常解析 alias，所以引用 ttypescript + typescript-transform-paths 来解决这个问题，如引用 src/utils 中的方法可直接 import { ... } from '@/util'，配置如下
+
+1. 安装 ttypescript + typescript-transform-paths 依赖
+
+```
+// 安装依赖
+yarn add -D ttypescript
+yarn add -D typescript-transform-paths
+```
+
+2. 配置 tsconfig
+
+```
+// tsconfig
+{
+...
+    "baseUrl": "miniprogram" /* Base directory to resolve non-absolute module names. */,
+    "paths": {
+      "@/*": ["src/*"],
+      ...
+    } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */,
+"plugins": [{ "transform": "typescript-transform-paths" }],
+...
+}
+```
+
+3. 使用 ttsc 进行编译
+
+```
+// package.json
+...
+   "scripts" {
+       "tsc": "ttsc",
+       ...
+    }
+...
+```
+
+4. 使用 alias
+
+```
+// 引用utils中的方法
+import { ... } from '@/util'
+```

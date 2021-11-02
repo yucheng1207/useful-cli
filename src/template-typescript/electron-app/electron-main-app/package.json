@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "A Electron application written with Typescript",
     "scripts": {
-        "build": "tsc",
-        "watch": "tsc -w",
+        "build": "rm -rf dist && ttsc",
+        "watch": "ttsc -w",
         "lint": "eslint -c .eslintrc --ext .ts ./src",
         "start": "npm run build && NODE_ENV=development electron ./dist/main.js"
     },
@@ -23,7 +23,9 @@
         "dotenv": "^10.0.0",
         "electron": "^15.2.0",
         "eslint": "^7.32.0",
-        "typescript": "^4.4.4"
+        "ttypescript": "^1.5.12",
+        "typescript": "^4.4.4",
+        "typescript-transform-paths": "^3.3.1"
     },
     "dependencies": {}
 }
