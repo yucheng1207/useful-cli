@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import './config/env' // 注册环境变量
+import { Logger } from './managers/LoggerManager';
 import WindowManager from './managers/WindowManager';
 
 function createWindow() {
@@ -13,7 +14,7 @@ function createWindow() {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
     createWindow();
-
+    Logger.info('app ready')
     app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the
         // dock icon is clicked and there are no other windows open.

@@ -114,3 +114,12 @@ yarn add -D typescript-transform-paths
 // 引用utils中的方法
 import { ... } from '@/util'
 ```
+
+## Logger
+使用[bunyan](https://www.npmjs.com/package/bunyan)进行日志收集
+日志保存在`path.join(Globals.LOG_PATH, Globals.LOG_NAME)`，使用方法如下
+
+```javascript
+import { Logger } from './managers/LoggerManager';
+Logger.info('hello')
+```

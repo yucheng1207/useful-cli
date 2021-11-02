@@ -19,9 +19,7 @@ function createBrowserWindow(
 export default class WindowManager {
     private static _manager: WindowManager;
 
-    constructor() {}
-
-    public static getInstance() {
+    public static getInstance(): WindowManager {
         if (!this._manager) {
             this._manager = new WindowManager();
         }
@@ -32,7 +30,7 @@ export default class WindowManager {
     /**
      * create and open window that app main window
      */
-    public createMainWindow(url?: string, openDevTools?: boolean) {
+    public createMainWindow(url?: string, openDevTools?: boolean): BrowserWindow {
         // create main window
         const security = process.env.NODE_ENV.startsWith('production');
         const options: BrowserWindowConstructorOptions = {
