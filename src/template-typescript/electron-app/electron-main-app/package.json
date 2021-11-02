@@ -6,15 +6,13 @@
         "build": "tsc",
         "watch": "tsc -w",
         "lint": "eslint -c .eslintrc --ext .ts ./src",
-        "start": "npm run build && electron ./dist/main.js"
+        "start": "npm run build && NODE_ENV=development electron ./dist/main.js"
     },
     "repository": "",
     "keywords": [
         "Electron",
         "quick",
         "start",
-        "tutorial",
-        "demo",
         "typescript"
     ],
     "author": "GitHub",
@@ -22,6 +20,7 @@
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.33.0",
         "@typescript-eslint/parser": "^4.33.0",
+        "dotenv": "^10.0.0",
         "electron": "^15.2.0",
         "eslint": "^7.32.0",
         "typescript": "^4.4.4"
