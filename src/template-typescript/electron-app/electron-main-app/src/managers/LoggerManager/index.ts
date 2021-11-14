@@ -9,7 +9,7 @@ export class LoggerManager {
     public static getInstance(): any {
         if (!this._logger) {
             const name = 'ElectronApp'; // 日志内容中name字段的值
-            const env = Globals.NODE_ENV;
+            const env = Globals.APP_ENV;
 
             try {
                 console.log('log path', path.join(Globals.LOG_PATH, Globals.LOG_NAME));

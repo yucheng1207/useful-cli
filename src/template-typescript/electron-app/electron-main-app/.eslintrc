@@ -5,10 +5,15 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/no-var-requires": "off"
   },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
-  ]
+  ],
+  "env": {
+    "es6": true,
+    "node": true
+  }
 }

@@ -9,14 +9,12 @@ yarn tsc
 # To recompile automatically and to allow using [electron-reload](https://github.com/yan-foto/electron-reload), run this in a separate terminal:
 yarn tsc:watch
 
-# 输出渲染进程文件
-yarn copy-renderer
-
 # 本地调试
 yarn dev
 
 # 打包
 build:mac:test
+build:win:test
 ```
 
 # 项目搭建
@@ -24,66 +22,16 @@ build:mac:test
 ## 资料
 [electron 官网](https://www.electronjs.org/zh/docs/latest/tutorial/quick-start)
 [electron-builder](https://github.com/electron-userland/electron-builder)
+[electron 环境变量](https://www.electronjs.org/docs/latest/api/environment-variables)
+[boilerplates](https://www.electron.build/#boilerplates)
 
 ## node 版本
 
 v16.11.1
 
 ## 配置环境变量
-
-1. 在 env 目录下定义好不同环境的 env 文件
-
--   env/development.env 开发环境
--   env/production:rc.env 预正式环境
--   env/production.env 正式环境
--   env/test.env 测试环境
-
-2. 通过 script 注入相应的 NODE_ENV
-
-```bash
-NODE_ENV=test electron ./dist/main.js
-```
-
-3. 使用 dotenv 根据 NODE_ENV 加载相应的 env 文件
-
-```javascript
-// main.js
-enum AppEnv {
-    DEV = 'development',
-    TEST = 'test',
-    RC = 'production:rc',
-    PROD = 'production',
-}
-const env = process.env.NODE_ENV as AppEnv;
-
-function configEnv() {
-    const envs = Object.values(AppEnv);
-    const isVaildEnv = env && envs.includes(env);
-    const currEnv = env ? (isVaildEnv ? env : AppEnv.PROD) : AppEnv.DEV;
-    console.log('current env:', currEnv, isVaildEnv);
-    // 先构造出.env*文件的绝对路径
-    const appDirectory = fs.realpathSync(process.cwd());
-    const resolveApp = (relativePath: string) =>
-        path.resolve(appDirectory, relativePath);
-    const pathsDotenv = resolveApp(`env/${currEnv}.env`);
-
-    dotEnv.config({ path: `${pathsDotenv}` }); // 加载相应的env文件
-}
-configEnv();
-```
-
-dotEnv.config 可以加载 env 中的环境变量， 比如加载的是`env/test.env`
-
-```
-// env/test.env
-APP_NAME=electron_app
-```
-
-则在应用中可以使用`process.env.APP_NAME`获取到环境变量`APP_NAME`
-
-```javascript
-console.log(process.env.APP_NAME); // 输出：electron_app
-```
+electron-builder配置dotenv无效，所以使用脚本来拷贝env文件
+根据打包环境将env下的配置拷贝到src/env.js中，程序中直接访问src/env.js即可
 
 ## 配置 alias
 

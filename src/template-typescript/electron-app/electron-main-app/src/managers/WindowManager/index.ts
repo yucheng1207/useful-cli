@@ -1,6 +1,5 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { Globals } from '@/config/globals';
-const isProd = Globals.NODE_ENV.startsWith('production')
 
 function createBrowserWindow(
     options: BrowserWindowConstructorOptions,
@@ -41,7 +40,7 @@ export default class WindowManager {
                 process.platform === 'darwin' ? 'hiddenInset' : 'default',
             backgroundColor: '#FFFFFF',
             webPreferences: {
-                webSecurity: isProd,
+                webSecurity: Globals.IS_PROD,
                 // preload: path.join(__dirname, 'preload.js'),
                 // https://github.com/electron/electron/issues/7300#issuecomment-493077796
                 nodeIntegration: true,
