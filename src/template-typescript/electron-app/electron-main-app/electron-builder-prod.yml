@@ -1,0 +1,62 @@
+artifactName: "${productName}-${version}.${ext}" # 应用最终的名称
+productName: UsefulElectronApp
+appId: com.example.app
+copyright: Example co
+# npmRebuild: false # 是否在开始编译前重构原生依赖,可先尝试true, 如果出现问题再修改为false
+
+asar: true
+
+directories:
+    buildResources: build-assets/ # 默认：build
+    output: release-builds/ # 默认：dist
+
+files:
+    - filter:
+          - bld/**/*            # ts编译后的文件
+          - build-assets/**/*   # 打包静态文件
+          - dist/**/*           # 渲染进程文件
+          - node_modules/**/*   # 依赖文件
+
+# publish:
+#     - provider: generic
+#       url: "" # publish api
+
+nsis:
+    oneClick: false # 是否一键安装(静默安装)
+    allowToChangeInstallationDirectory: true # 允许用户选择安装位置
+    createDesktopShortcut: always # 创建桌面快捷方式
+    createStartMenuShortcut: true # 创建开始菜单快捷方式
+    runAfterFinish: true # 安装完成后是否勾选立即执行
+    perMachine: true # 是否开启安装时权限限制（此电脑或当前用户）
+    allowElevation: true # 需与perMachine: true 配合使用，则不让用选择（此电脑或当前用户）
+protocols:
+    name: "useful-electron-app-alpha"
+    schemes:
+        - "useful-electron-app-alpha"
+dmg:
+    contents:
+        - type: link
+          path: /Applications
+          x: 410
+          y: 150
+        - type: file
+          x: 130
+          y: 150
+
+mac:
+    target: dmg
+    category: office
+    icon: uIcon.png
+    artifactName: "${productName}-${version}.${ext}" # 应用安装程序名称
+win:
+    target: nsis
+    icon: uIcon.png
+    verifyUpdateCodeSignature: false # 是否需要验证签名
+    artifactName: "${productName}-setup-${version}.${ext}" # 应用安装程序名称
+    requestedExecutionLevel: requireAdministrator # 执行等级(是否需要管理员权限,通常情况不需要)
+linux:
+    icon: uIcon.png
+    target:
+      - deb
+      - AppImage
+

@@ -2,11 +2,19 @@
     "name": "electron-main-app",
     "version": "1.0.0",
     "description": "A Electron application written with Typescript",
+    "main": "./bld/src/main.js",
     "scripts": {
-        "build": "rm -rf dist && ttsc",
-        "watch": "ttsc -w",
+        "tsc": "rm -rf bld && ttsc",
+        "tsc:watch": "ttsc -w",
         "lint": "eslint -c .eslintrc --ext .ts ./src",
-        "start": "npm run build && NODE_ENV=development electron ./dist/main.js"
+        "dev": "npm run tsc && NODE_ENV=development electron ./bld/src/main.js",
+        "copy-renderer": "cp -r renderer/ dist",
+        "build:mac:test": "npm run tsc && NODE_ENV=test electron-builder --mac --config electron-builder-test.yml",
+        "build:win:test": "npm run tsc && NODE_ENV=test electron-builder --x64 --win --config electron-builder-test.yml",
+        "build:mac:rc": "npm run tsc && NODE_ENV=production:rc electron-builder --mac --config electron-builder-rc.yml",
+        "build:win:rc": "npm run tsc && NODE_ENV=production:rc electron-builder --x64 --win --config electron-builder-rc.yml",
+        "build:mac:prod": "npm run tsc && NODE_ENV=production electron-builder --mac --config electron-builder-prod.yml",
+        "build:win:prod": "npm run tsc && NODE_ENV=production electron-builder --x64 --win --config electron-builder-prod.yml"
     },
     "repository": "",
     "keywords": [
@@ -23,6 +31,7 @@
         "@typescript-eslint/parser": "^4.33.0",
         "dotenv": "^10.0.0",
         "electron": "^15.2.0",
+        "electron-builder": "^22.13.1",
         "eslint": "^7.32.0",
         "ttypescript": "^1.5.12",
         "typescript": "^4.4.4",

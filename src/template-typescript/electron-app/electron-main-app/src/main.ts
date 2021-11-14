@@ -1,12 +1,11 @@
 import { app, BrowserWindow } from 'electron';
-import * as path from 'path';
 import './config/env' // 注册环境变量
 import { Logger } from './managers/LoggerManager';
 import WindowManager from './managers/WindowManager';
+import { Globals } from '@/config/globals';
 
 function createWindow() {
-    const url = path.join(__dirname, '../index.html');
-    return WindowManager.getInstance().createMainWindow(url, true);
+    return WindowManager.getInstance().createMainWindow(Globals.WEBVIEW_ROOT_URL, true);
 }
 
 // This method will be called when Electron has finished

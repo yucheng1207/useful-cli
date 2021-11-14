@@ -3,8 +3,9 @@
         "module": "commonjs",
         "noImplicitAny": true,
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "bld",
         "baseUrl": ".",
+        "rootDir": ".",
         "paths": {
             "@/*": ["src/*"],
             "@main/*": ["src/*"]

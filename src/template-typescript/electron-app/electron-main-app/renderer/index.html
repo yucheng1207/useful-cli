@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Renderer</title>
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+  </head>
+  <body>
+    <p>这是渲染进程！</p>
+    <p>主进程会自动加载“/dist”下的文件作为渲染进程的内容，也可以修改”WEBVIEW_ROOT_URL”的值来改变主进程加载内容</p>
+    <p>开发环境下可以本地部署渲染进程代码，然后将“WEBVIEW_ROOT_URL”修改为`http://localhost:****/`进行调试</p>
+    <p>正式环境下需要将渲染进程代码打包后将打包后的内容拷贝到“/dist”文件加载再进行应用打包</p>
+
+  </body>
+</html>

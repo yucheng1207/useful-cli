@@ -1,5 +1,6 @@
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
-import * as path from 'path';
+import { Globals } from '@/config/globals';
+const isProd = Globals.NODE_ENV.startsWith('production')
 
 function createBrowserWindow(
     options: BrowserWindowConstructorOptions,
@@ -32,7 +33,6 @@ export default class WindowManager {
      */
     public createMainWindow(url?: string, openDevTools?: boolean): BrowserWindow {
         // create main window
-        const security = process.env.NODE_ENV.startsWith('production');
         const options: BrowserWindowConstructorOptions = {
             width: 800,
             height: 600,
@@ -41,8 +41,8 @@ export default class WindowManager {
                 process.platform === 'darwin' ? 'hiddenInset' : 'default',
             backgroundColor: '#FFFFFF',
             webPreferences: {
-                webSecurity: security,
-                preload: path.join(__dirname, 'preload.js'),
+                webSecurity: isProd,
+                // preload: path.join(__dirname, 'preload.js'),
                 // https://github.com/electron/electron/issues/7300#issuecomment-493077796
                 nodeIntegration: true,
             },
