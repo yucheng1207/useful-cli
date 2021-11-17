@@ -1,10 +1,13 @@
 import { app, BrowserWindow } from 'electron';
-import { Logger } from './managers/LoggerManager';
-import WindowManager from './managers/WindowManager';
+import { Logger } from '@/managers/LoggerManager';
+import WindowManager from '@/managers/WindowManager';
 import { Globals } from '@/config/globals';
 
 function createWindow() {
-    return WindowManager.getInstance().createMainWindow(Globals.WEBVIEW_ROOT_URL, Globals.IS_PROD);
+    return WindowManager.getInstance().createMainWindow(
+        Globals.WEBVIEW_ROOT_URL,
+        !Globals.IS_PROD
+    )
 }
 
 // This method will be called when Electron has finished

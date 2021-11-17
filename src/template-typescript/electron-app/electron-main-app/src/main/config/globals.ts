@@ -10,7 +10,7 @@ const env = require("../env.js");
 const tmpdir = os.tmpdir()
 const appEnv = env.ENV as AppEnv
 const isProd = appEnv === AppEnv.PROD || appEnv === AppEnv.RC
-const htmlRelativePath = isProd ? path.join('file://', process.resourcesPath, '/app/dist/index.html') : path.join(__dirname, '../../../dist/index.html')
+const htmlRelativePath = isProd ? path.join('file://', process.resourcesPath, '/app/dist/index.html') : path.join(__dirname, '../../../../dist/index.html')
 
 console.log('appEnv', appEnv)
 

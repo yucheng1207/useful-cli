@@ -8,10 +8,10 @@
         "baseUrl": ".",
         "rootDir": ".",
         "paths": {
-            "@/*": ["src/*"],
-            "@main/*": ["src/*"]
+            "@/*": ["src/main/*"],
+            "@main/*": ["src/main/*"]
         },
         "plugins": [{ "transform": "typescript-transform-paths" }]
     },
-    "include": ["src/**/*"]
+    "include": ["src/main/**/*"]
 }
