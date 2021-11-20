@@ -12,7 +12,7 @@ const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 const paths = require('./paths');
 
-const DEV = process.env.NODE_ENV === 'development';
+const DEV = paths.env === 'development';
 
 module.exports = {
     context: __dirname,
