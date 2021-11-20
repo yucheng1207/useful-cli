@@ -26,6 +26,9 @@ yarn pack:[platform]:[env]
 
 v16.11.1
 
+## 热重载
+参考了[electron-vue](https://github.com/SimulatedGREG/electron-vue/blob/master/template/.electron-vue/dev-runner.js)的dev-runner实现热重载功能
+
 ## 打包
 
 该项目使用 `gulp + webpack + electron-builder` 进行打包。

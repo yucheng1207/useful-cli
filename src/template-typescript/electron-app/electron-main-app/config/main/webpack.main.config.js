@@ -4,13 +4,14 @@ const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const { paths } = require('../../scripts/paths')
 
-const isProd = process.env.NODE_ENV === 'production'
-console.log('webpack.main.config.js NODE_ENV:', process.env.NODE_ENV)
+const env = process.env.NODE_ENV || 'development'
+const isProd = env === 'production'
+console.log('webpack.main.config.js NODE_ENV:', env, process.env.NODE_ENV)
 
 const cfg_paths = {
   entry: paths.mainEntry,
   mainSrc: paths.mainSrc,
-  dotEnv: path.resolve(paths.mainEnvConfig, `${process.env.NODE_ENV}.env`),
+  dotEnv: path.resolve(paths.mainEnvConfig, `${env}.env`),
 }
 
 let mainConfig = {

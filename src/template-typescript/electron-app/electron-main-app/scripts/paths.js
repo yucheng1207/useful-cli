@@ -5,6 +5,7 @@ const paths = {
     mainEntry: path.join(__dirname, '..', 'src/main/main.ts'),
     mainSrc: path.join(__dirname, '..', 'src/main'),
     mianDist: path.join(__dirname, '..', 'dist/main'),
+    mianDistEntry: path.join(__dirname, '..', 'dist/main/main.js'),
     mainEnvConfig: path.resolve(__dirname, '..', `config/main/env`),
     mainWebpackConfig: path.join(__dirname, '..', 'config/main/webpack.main.config'),
     envConfig: path.join(__dirname, '..', 'src/main/config/env'),
