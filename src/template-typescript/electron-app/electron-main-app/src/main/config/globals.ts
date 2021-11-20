@@ -6,18 +6,24 @@ export enum AppEnv {
     RC = 'production:rc',
     PROD = 'production',
 }
-const env = require("../env.js");
+const env = process.env;
 const tmpdir = os.tmpdir()
 const appEnv = env.ENV as AppEnv
+const isDev = appEnv === AppEnv.DEV
 const isProd = appEnv === AppEnv.PROD || appEnv === AppEnv.RC
-const htmlRelativePath = isProd ? path.join('file://', process.resourcesPath, '/app/dist/index.html') : path.join(__dirname, '../../../../dist/index.html')
-
-console.log('appEnv', appEnv)
+// const htmlInPackagePath = path.join(process.resourcesPath, '/app/dist/renderer/index.html') // 打包asar为false时有效
+const htmlPath = path.join(__dirname, '../..', 'dist/renderer/index.html')
+const logPath = path.join(tmpdir, env.LOG_FOLDER)
+const logName = 'app.log'
+console.log('主进程环境：', appEnv, process.env.NODE_ENV)
+console.log('日志文件路径：', path.join(logPath, logName));
+console.log('Webview路径：', htmlPath);
 
 export const Globals = {
     APP_ENV: appEnv,
+    IS_DEV: isDev,
     IS_PROD: isProd,
-    WEBVIEW_ROOT_URL: htmlRelativePath,
-    LOG_PATH: path.join(tmpdir, env.LOG_FOLDER),
-    LOG_NAME: 'app.log',
+    WEBVIEW_ROOT_URL: htmlPath,
+    LOG_PATH: logPath,
+    LOG_NAME: logName
 };

@@ -12,7 +12,6 @@ export class LoggerManager {
             const env = Globals.APP_ENV;
 
             try {
-                console.log('log path', path.join(Globals.LOG_PATH, Globals.LOG_NAME));
                 fs.accessSync(
                     path.join(Globals.LOG_PATH, Globals.LOG_NAME),
                     fs.constants.R_OK | fs.constants.W_OK

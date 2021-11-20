@@ -4,14 +4,13 @@
         "allowJs": true,
         "noImplicitAny": true,
         "sourceMap": true,
-        "outDir": "bld",
+        "outDir": "dist/main",
         "baseUrl": ".",
-        "rootDir": ".",
+        // "rootDir": ".",
         "paths": {
             "@/*": ["src/main/*"],
             "@main/*": ["src/main/*"]
         },
-        "plugins": [{ "transform": "typescript-transform-paths" }]
     },
     "include": ["src/main/**/*"]
 }

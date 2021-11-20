@@ -1,10 +1,10 @@
 artifactName: "${productName}-${version}.${ext}" # 应用最终的名称
-productName: UsefulElectronAppAlpha
+productName: UsefulElectronAppRc
 appId: com.example.app
 copyright: Example co
 # npmRebuild: false # 是否在开始编译前重构原生依赖,可先尝试true, 如果出现问题再修改为false
 
-asar: false
+asar: true
 
 directories:
     buildResources: build-assets/ # 默认：build
@@ -12,10 +12,9 @@ directories:
 
 files:
     - filter:
-          - bld/**/*            # ts编译后的文件
           - build-assets/**/*   # 打包静态文件
-          - dist/**/*           # 渲染进程输出文件
-          - node_modules/**/*   # 依赖文件
+          - dist/**/*           # 编译后的文件
+        #   - node_modules/**/*   # 依赖文件
 
 # publish:
 #     - provider: generic
@@ -45,19 +44,17 @@ dmg:
 
 mac:
     target: dmg
-    # asar: false
     category: office
     icon: uIcon.png
     artifactName: "${productName}-${version}.${ext}" # 应用安装程序名称
 win:
     target: nsis
-    # asar: false
-    icon: uIcon.png
+     icon: uIcon.png
     verifyUpdateCodeSignature: false # 是否需要验证签名
     artifactName: "${productName}-setup-${version}.${ext}" # 应用安装程序名称
     requestedExecutionLevel: requireAdministrator # 执行等级(是否需要管理员权限,通常情况不需要)
 linux:
-    icon: uIcon.png
+     icon: uIcon.png
     target:
       - deb
       - AppImage
