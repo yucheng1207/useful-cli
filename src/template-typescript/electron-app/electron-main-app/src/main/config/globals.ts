@@ -12,7 +12,7 @@ const appEnv = env.ENV as AppEnv
 const isDev = appEnv === AppEnv.DEV
 const isProd = appEnv === AppEnv.PROD || appEnv === AppEnv.RC
 // const htmlInPackagePath = path.join(process.resourcesPath, '/app/dist/renderer/index.html') // 打包asar为false时有效
-const htmlPath = path.join(__dirname, '../..', 'dist/renderer/index.html')
+const htmlPath = isDev ? 'http://localhost:3000' : path.join(__dirname, '../..', 'dist/renderer/index.html')
 const logPath = path.join(tmpdir, env.LOG_FOLDER)
 const logName = 'app.log'
 console.log('主进程环境：', appEnv, process.env.NODE_ENV)

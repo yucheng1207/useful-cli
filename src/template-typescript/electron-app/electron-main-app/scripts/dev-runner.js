@@ -4,19 +4,15 @@
  */
 const chalk = require('chalk')
 const electron = require('electron')
-const path = require('path')
 const { spawn } = require('child_process')
+const { existsSync } = require('fs');
 const webpack = require('webpack')
-// const WebpackDevServer = require('webpack-dev-server')
-// const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const { paths } = require('./paths')
 const mainConfig = require(paths.mainWebpackConfig)
-// const rendererConfig = require('./webpack.renderer.config')
 
 let electronProcess = null
 let manualRestart = false
-let hotMiddleware
 
 function logStats (proc, data) {
   let log = ''
@@ -40,45 +36,14 @@ function logStats (proc, data) {
   console.log(log)
 }
 
-function startRenderer () {
-  return new Promise((resolve, reject) => {
-    resolve()
-    // rendererConfig.entry.renderer = [path.join(__dirname, 'dev-client')].concat(rendererConfig.entry.renderer)
-    // rendererConfig.mode = 'development'
-    // const compiler = webpack(rendererConfig)
-    // hotMiddleware = webpackHotMiddleware(compiler, {
-    //   log: false,
-    //   heartbeat: 2500
-    // })
-
-    // compiler.hooks.compilation.tap('compilation', compilation => {
-    //   compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
-    //     hotMiddleware.publish({ action: 'reload' })
-    //     cb()
-    //   })
-    // })
-
-    // compiler.hooks.done.tap('done', stats => {
-    //   logStats('Renderer', stats)
-    // })
-
-    // const server = new WebpackDevServer(
-    //   compiler,
-    //   {
-    //     contentBase: path.join(__dirname, '../'),
-    //     quiet: true,
-    //     hot: true,
-    //     before (app, ctx) {
-    //       // app.use(hotMiddleware)
-    //       ctx.middleware.waitUntilValid(() => {
-    //         resolve()
-    //       })
-    //     }
-    //   }
-    // )
-
-    // server.listen(9080)
-  })
+async function startRenderer () {
+  if (!existsSync) {
+    electronLog('无法找到正确的渲染进程启动脚本，请先将"scripts/renderer/electron-dev-runner.js拷贝到渲染进程目录下，并将paths.rendererDevRunnerPath指定为这个目录"', 'red')
+    throw new Error('Renderer electron-dev-runner not found')
+  }
+  const port = 3000
+  const rendererDevRunner = require(paths.rendererDevRunnerPath)
+  await rendererDevRunner.run(port)
 }
 
 function startMain () {
@@ -86,11 +51,10 @@ function startMain () {
     mainConfig.mode = 'development'
     const compiler = webpack(mainConfig)
 
-    // compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
-    //   logStats('Main', chalk.white.bold('compiling...'))
-    //   hotMiddleware.publish({ action: 'compiling' })
-    //   done()
-    // })
+    compiler.hooks.watchRun.tapAsync('watch-run', (compilation, done) => {
+      logStats('Main', chalk.white.bold('compiling...'))
+      done()
+    })
 
     compiler.watch({}, (err, stats) => {
       if (err) {
