@@ -1,4 +1,4 @@
-artifactName: "${productName}-${version}.${ext}" # 应用最终的名称
+artifactName: '${productName}-${version}.${ext}' # 应用最终的名称
 productName: UsefulElectronApp
 appId: com.example.app
 copyright: Example co
@@ -12,9 +12,9 @@ directories:
 
 files:
     - filter:
-          - build-assets/**/*   # 打包静态文件
-          - dist/**/*           # 编译后的文件
-        #   - node_modules/**/*   # 依赖文件
+          - build-assets/**/* # 打包静态文件
+          - dist/**/* # 编译后的文件
+          #   - node_modules/**/*   # 依赖文件
 
 # publish:
 #     - provider: generic
@@ -29,9 +29,9 @@ nsis:
     perMachine: true # 是否开启安装时权限限制（此电脑或当前用户）
     allowElevation: true # 需与perMachine: true 配合使用，则不让用选择（此电脑或当前用户）
 protocols:
-    name: "useful-electron-app-alpha"
+    name: 'useful-electron-app-alpha'
     schemes:
-        - "useful-electron-app-alpha"
+        - 'useful-electron-app-alpha'
 dmg:
     contents:
         - type: link
@@ -46,16 +46,15 @@ mac:
     target: dmg
     category: office
     icon: uIcon.png
-    artifactName: "${productName}-${version}.${ext}" # 应用安装程序名称
+    artifactName: '${productName}-${version}.${ext}' # 应用安装程序名称
 win:
     target: nsis
     icon: uIcon.png
     verifyUpdateCodeSignature: false # 是否需要验证签名
-    artifactName: "${productName}-setup-${version}.${ext}" # 应用安装程序名称
+    artifactName: '${productName}-setup-${version}.${ext}' # 应用安装程序名称
     requestedExecutionLevel: requireAdministrator # 执行等级(是否需要管理员权限,通常情况不需要)
 linux:
     icon: uIcon.png
     target:
-      - deb
-      - AppImage
-
+        - deb
+        - AppImage

@@ -6,8 +6,8 @@ const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
-// todo: 需要设置一下renderer的webpack.config
-const rendererConfig = require('renderer-webpack-config-path');
+// renderer的webpack.config
+const rendererConfig = require('../webpack.renderer.config');
 
 function logStats(proc, data) {
     let log = '';
@@ -49,7 +49,6 @@ function startRenderer(port = 3000) {
                 quiet: true,
                 hot: true,
                 before(app, ctx) {
-                    // app.use(hotMiddleware)
                     ctx.middleware.waitUntilValid(() => {
                         resolve();
                     });

@@ -1,6 +1,6 @@
 const minimist = require('minimist');
 const chalk = require('chalk');
-const cp = require('child_process');
+const { execSync } = require('./common/utils');
 
 const envs = ['development', 'test', 'production:rc', 'production'];
 const platforms = ['mac', 'win'];
@@ -10,8 +10,8 @@ const cmds = {
     buildRenderer: 'gulp build-renderer',
     buildMain: 'gulp build-main',
     packWin: 'gulp only-pack-win',
-    packMac: 'gulp only-pack-mac'
-}
+    packMac: 'gulp only-pack-mac',
+};
 
 const argv = minimist(process.argv.slice(2), {
     boolean: ['help', 'clean', 'compileRenderer', 'compileMain'],
@@ -27,10 +27,6 @@ const argv = minimist(process.argv.slice(2), {
     string: ['env', 'platform'],
 });
 
-function execSync(cmd) {
-    cp.execSync(cmd, {stdio: 'inherit'}) // 配置stdio: 'inherit'可将运行中的打印输出
-}
-
 async function build(argv) {
     const { compileRenderer, compileMain, pack, env, platform } = argv;
     const isVaildEnv = envs.includes(env);
@@ -44,12 +40,16 @@ async function build(argv) {
     }
 
     // 编译渲染进程
-    compileRenderer &&  execSync(`NODE_ENV=${env} ${cmds.buildRenderer}`);
+    compileRenderer && execSync(`NODE_ENV=${env} ${cmds.buildRenderer}`);
     // 编译主进程
     compileMain && execSync(`NODE_ENV=${env} ${cmds.buildMain}`);
     // 打包
-    pack && execSync(`NODE_ENV=${env} ${platform === 'win' ? cmds.packWin : cmds.packMac}`);
-
+    pack &&
+        execSync(
+            `NODE_ENV=${env} ${
+                platform === 'win' ? cmds.packWin : cmds.packMac
+            }`
+        );
 }
 
 async function main() {
@@ -63,7 +63,6 @@ async function main() {
         clean && execSync(cmds.cleanApp);
 
         build(argv);
-
     } catch (error) {
         console.log(chalk.red(error));
     }
@@ -72,15 +71,29 @@ async function main() {
 function printHelp() {
     console.log('打包electron app的脚本，参数说明如下\n');
     console.log(`${chalk.green('--help')} - 打印帮助信息\n`);
-    console.log(`${chalk.green('--clean')} - 清除上一次的打包文件，默认值为false\n`);
+    console.log(
+        `${chalk.green('--clean')} - 清除上一次的打包文件，默认值为false\n`
+    );
     console.log(`${chalk.green('--pack')} - 是否要执行打包， 默认值为false\n`);
-    console.log(`${chalk.green('--compileRenderer')} - 是否编译渲染进程代码，默认值为true\n`);
-    console.log(`${chalk.green('--compileMain')} - 是否编译主进程代码，默认值为true\n`);
-    console.log(`${chalk.green('--env [env]')} - 打包编译的环境，可选值为【${chalk.blue(envs.join(','))}】，默认值为test\n`);
+    console.log(
+        `${chalk.green(
+            '--compileRenderer'
+        )} - 是否编译渲染进程代码，默认值为true\n`
+    );
+    console.log(
+        `${chalk.green('--compileMain')} - 是否编译主进程代码，默认值为true\n`
+    );
+    console.log(
+        `${chalk.green('--env [env]')} - 打包编译的环境，可选值为【${chalk.blue(
+            envs.join(',')
+        )}】，默认值为test\n`
+    );
     console.log(
         `${chalk.green(
             '--platform [platform]'
-        )} - 打包编译的平台，可选值为【${chalk.blue(platforms.join(','))}】，默认值为mac\n`
+        )} - 打包编译的平台，可选值为【${chalk.blue(
+            platforms.join(',')
+        )}】，默认值为mac\n`
     );
 }
 

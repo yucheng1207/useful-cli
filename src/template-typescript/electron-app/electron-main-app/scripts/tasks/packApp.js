@@ -1,12 +1,12 @@
 const gulp = require('gulp');
 const chalk = require('chalk');
-const { execSync } = require('child_process');
 const builder = require('electron-builder');
-const { paths } = require('../paths');
+const { execSync } = require('../common/utils');
+const { paths } = require('../common/paths');
 
 const envs = ['test', 'production:rc', 'production'];
 const platforms = ['mac', 'win'];
-const buildEnv = process.env.NODE_ENV
+const buildEnv = process.env.NODE_ENV;
 
 function getYmlPath(env) {
     switch (env) {
@@ -36,9 +36,7 @@ function getPlatformTargets(platform) {
 
 async function clean() {
     console.log('正在删除上一次打包文件...');
-    execSync(
-        `rm -rf ${paths.dist} ${paths.releaseBuilds}`
-    );
+    execSync(`rm -rf ${paths.dist} ${paths.releaseBuilds}`);
     console.log('删除成功');
 }
 
@@ -53,31 +51,35 @@ async function packApp(params) {
     if (!isVaildPlatform) {
         throw new Error(`请输入正确的打包平台(${platforms.join(',')})`);
     }
+
+    const ymlConfig = getYmlPath(env);
+
     console.log(
         `开始打包，打包环境为${chalk.blue(env)}, 打包平台为${chalk.blue(
             platform
         )}`
     );
+    console.log(`Yml配置文件路径为${chalk.blue(ymlConfig)}`);
     // execSync(`electron-builder --mac --config electron-builder-test.yml`)
     // execSync(`electron-builder --x64 --win --config electron-builder-test.yml`)
     // 参考：https://www.electron.build/#programmatic-usage
     await builder.build({
         targets: getPlatformTargets(platform),
-        config: getYmlPath(env),
+        config: ymlConfig,
     });
     console.log('打包完成');
 }
 
 async function packWin() {
-    await packApp({ env: buildEnv, platform: 'win' })
+    await packApp({ env: buildEnv, platform: 'win' });
 }
 
 async function packMac() {
-    await packApp({ env: buildEnv, platform: 'mac' })
+    await packApp({ env: buildEnv, platform: 'mac' });
 }
 
 module.exports = {
     clean,
     packWin,
     packMac,
-}
+};
