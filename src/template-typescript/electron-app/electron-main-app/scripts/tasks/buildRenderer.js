@@ -31,8 +31,9 @@ async function cleanRenderer() {
  * 编译渲染进程代码
  */
 async function buildRenderer() {
-    console.log('正在编译渲染进程文件...');
-    execSync(`cd src/renderer && yarn build`);
+    const env = process.env.NODE_ENV;
+    console.log(`正在编译【${env}环境】渲染进程文件...`);
+    execSync(`cd ${paths.rendererSrc} && yarn build:${env}`);
     console.log('编译渲染进程文件成功');
     // console.log('正在编译渲染进程文件...');
     // return gulp

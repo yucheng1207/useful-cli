@@ -6,6 +6,10 @@
     "scripts": {
         "dev": "node ./scripts/electron-dev-runner.js",
         "build": "node scripts/build",
+        "build:development": "node scripts/build",
+        "build:test": "node scripts/build",
+        "build:production:rc": "node scripts/build",
+        "build:production": "node scripts/build",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",

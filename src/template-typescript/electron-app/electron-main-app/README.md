@@ -29,6 +29,18 @@ v16.11.1
 
 ## 本地调试
 
+执行`yarn dev`会自动本地运行主进程和渲染进程代码，详情看`scripts/dev-runner.js`，运行步骤为
+
+1. startRenderer：启动渲染进程
+   可以看到`startRenderer`中的逻辑很简单，只是执行了一下渲染进程启动脚本`electron-dev-run`，该脚本的目的就是让渲染进程在本地运行起来。
+   本项目默认渲染进程是一个最简单的 webpack 工程，如果需要改成其他框架（如 vue、react 等），可以参考下面的`渲染进程配置`小节进行替换。
+
+2. startMain：启动主进程（与 startRenderer 是同时进行的）
+   使用 webpack 对主进程代码进行编译，当代码发生改变时重新启动应用
+
+3. startElectron：启动应用
+   使用 electron 启动应用
+
 ### 热重载
 
 参考了[electron-vue](https://github.com/SimulatedGREG/electron-vue/blob/master/template/.electron-vue/dev-runner.js)的 dev-runner 实现热重载功能
@@ -37,15 +49,23 @@ v16.11.1
 
 更改 `scripts/common/paths.js` 中的 `rendererPort` 可以设置本地运行时调试的端口号
 
+### 渲染进程配置
+
+本项目渲染进程是一个最简单的 webpack 工程，实际开发中直接整个替换成其他业务工程，只需注意一下几点配置：
+
+1. 编写渲染进程的启动脚本：我们提供了一个模板(`scripts/renderer/electron-dev-runner.js`)，可以参考这个模板来编写，建议直接将模板拷贝到渲染进程目录后根据实际业务进行修改。同时将`path.rendererDevRunnerPath`设置为渲染进程中启动脚本(`electron-dev-runner`)所在位置
+2. 渲染进程的`package.json`中添加渲染进程编译命令，默认识别的编译命令是`yarn build:[env]`，如果不是请修改`buildRenderer.js`文件。同时修改`paths.rendererOutput`为编译输出路径
+
 ## 打包
 
 该项目使用 `gulp + webpack + electron-builder` 进行打包。打包流程为：
 
-1. 编译渲染进程代码，通过运行渲染进程的 build 命令进行打包，并将结果输出到`dist/renderer`文件夹下，详情看`scripts/tasks/buildRenderer.js`，默认执行的 build 命令是
+1. 编译渲染进程代码，通过运行渲染进程的 build 命令进行打包，并将结果输出到`dist/renderer`文件夹下，详情看`scripts/tasks/buildRenderer.js`，`buildRenderer.js`默认执行渲染进程编译命令是`yarn build:[env]`, 如果不是请修改`buildRenderer.js`文件
 
 ```
-// scripts/tasks/buildRenderer.js中执行build命令代码，如果渲染进程的打包命令不是 yarn build，需要自行修改成正确的打包命令
-execSync(`cd src/renderer && yarn build`);
+const env = process.env.NODE_ENV;
+console.log(`正在编译【${env}环境】渲染进程文件...`);
+execSync(`cd ${paths.rendererSrc} && yarn build:${env}`);
 ```
 
 2. 编译主进程代码，使用`webpack`对主进程代码进行编译，并将结果输出到`dist/main`文件夹下，详情看`scripts/tasks/buildMain.js`
@@ -92,6 +112,8 @@ electron 打包所有选项说明可以看[官方文档](https://www.electron.bu
 -   electron-builder-prod.yml -> 正式环境打包配置文件
 
 ### 打包文件说明
+
+打包相关的路径配置都放在`scripts/common/paths.js`中，详情请看该文件中的定义
 
 ```
 "config/electron-builder" => electron-builder配置文件

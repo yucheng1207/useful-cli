@@ -2,6 +2,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const { paths } = require('../../scripts/common/paths');
 
 const env = process.env.NODE_ENV || 'development';
 const isProd = env === 'production';
@@ -10,7 +11,7 @@ console.log('webpack.renderer.config.js NODE_ENV:', env, process.env.NODE_ENV);
 const cfg_paths = {
     entry: path.resolve(__dirname, 'index.ts'),
     htmlPath: path.resolve(__dirname, 'index.html'),
-    output: path.resolve(__dirname, 'dist'),
+    output: paths.rendererOutput, // path.resolve(__dirname, 'dist'),
 };
 
 let rendererConfig = {
