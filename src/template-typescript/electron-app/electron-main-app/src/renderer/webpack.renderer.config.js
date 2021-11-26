@@ -15,6 +15,7 @@ const cfg_paths = {
 };
 
 let rendererConfig = {
+    devtool: 'cheap-module-source-map', // [解决报错](https://www.thinbug.com/q/48047150)： Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self'".
     mode: isProd ? 'production' : 'development',
     entry: {
         renderer: cfg_paths.entry,

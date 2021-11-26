@@ -2,57 +2,56 @@ import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { Globals } from '@/config/globals';
 
 function createBrowserWindow(
-    options: BrowserWindowConstructorOptions,
-    url?: string
+	options: BrowserWindowConstructorOptions,
+	url?: string
 ): BrowserWindow {
-    const window = new BrowserWindow(options);
+	const window = new BrowserWindow(options);
 
-    if (url && url.includes('http')) {
-        window.loadURL(url);
-    } else if (url && !url.includes('http')) {
-        window.loadFile(url);
-    }
+	if (url && url.includes('http')) {
+		window.loadURL(url);
+	} else if (url && !url.includes('http')) {
+		window.loadFile(url);
+	}
 
-    return window;
+	return window;
 }
 
 export default class WindowManager {
-    private static _manager: WindowManager;
+	private static _manager: WindowManager;
 
-    public static getInstance(): WindowManager {
-        if (!this._manager) {
-            this._manager = new WindowManager();
-        }
+	public static getInstance(): WindowManager {
+		if (!this._manager) {
+			this._manager = new WindowManager();
+		}
 
-        return this._manager;
-    }
+		return this._manager;
+	}
 
-    /**
-     * create and open window that app main window
-     */
-    public createMainWindow(url?: string, openDevTools?: boolean): BrowserWindow {
-        // create main window
-        const options: BrowserWindowConstructorOptions = {
-            width: 800,
-            height: 600,
-            frame: process.platform === 'darwin',
-            titleBarStyle:
-                process.platform === 'darwin' ? 'hiddenInset' : 'default',
-            backgroundColor: '#FFFFFF',
-            webPreferences: {
-                webSecurity: Globals.IS_PROD,
-                // preload: path.join(__dirname, 'preload.js'),
-                // https://github.com/electron/electron/issues/7300#issuecomment-493077796
-                nodeIntegration: true,
-            },
-        };
+	/**
+	 * create and open window that app main window
+	 */
+	public createMainWindow(url?: string, openDevTools?: boolean): BrowserWindow {
+		// create main window
+		const options: BrowserWindowConstructorOptions = {
+			width: 800,
+			height: 600,
+			frame: process.platform === 'darwin',
+			titleBarStyle:
+				process.platform === 'darwin' ? 'hiddenInset' : 'default',
+			backgroundColor: '#FFFFFF',
+			webPreferences: {
+				webSecurity: Globals.IS_PROD,
+				nodeIntegration: true, // https://github.com/electron/electron/issues/7300#issuecomment-493077796
+				contextIsolation: false, // https://www.electronjs.org/zh/docs/latest/tutorial/context-isolation
+			},
+		};
 
-        const mainWin = createBrowserWindow(options, url);
+		const mainWin = createBrowserWindow(options, url);
 
-        if (openDevTools) {
-            mainWin.webContents.openDevTools();
-        }
+		if (openDevTools) {
+			mainWin.webContents.openDevTools();
+		}
 
-        return mainWin;
-    }
+		return mainWin;
+	}
 }
