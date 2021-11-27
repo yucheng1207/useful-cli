@@ -29,9 +29,9 @@ nsis:
     perMachine: true # 是否开启安装时权限限制（此电脑或当前用户）
     allowElevation: true # 需与perMachine: true 配合使用，则不让用选择（此电脑或当前用户）
 protocols:
-    name: 'useful-electron-app-alpha'
+    name: 'useful-electron-app-test'
     schemes:
-        - 'useful-electron-app-alpha'
+        - 'useful-electron-app-test'
 dmg:
     contents:
         - type: link

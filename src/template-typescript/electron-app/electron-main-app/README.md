@@ -157,7 +157,44 @@ Logger.info('hello');
 
 ## 主进程和渲染进程通信
 
-https://www.electronjs.org/zh/docs/latest/api/ipc-main
+[官方教程](https://www.electronjs.org/zh/docs/latest/api/ipc-main)
+
+## URL 远程启动（Deep Link）
+
+参考：
+[官方教程](https://www.electronjs.org/zh/docs/latest/tutorial/launch-app-from-url-in-another-app)
+[electron-deep-linking-mac-win](https://github.com/oikonomopo/electron-deep-linking-mac-win)
+
+1. 设置 schemes， 使用 electron-builder 打包加上 protocols 配置项
+
+```
+protocols:
+    name: "useful-electron-app"
+    schemes:
+        - "useful-electron-app"
+```
+
+2. 设置当前应用为[协议的默认处理程序](https://www.electronjs.org/docs/latest/api/app#appsetasdefaultprotocolclientprotocol-path-args)
+
+```
+const schemes = "meshkit-studio"
+app.setAsDefaultProtocolClient(schemes)
+```
+
+3. 获取 deeplink url
+
+-   macOs：当用户尝试打开第二个或通过 deeplink 打开 app 时，会触发 app 的'open-url'事件
+-   windows: 当用户尝试打开第二个或通过 deeplink 打开 app 时，会触发 app 的'second-instance'事件
+
+注意: 在 macOs 上，当用户尝试在 FInder 中打开您的应用程序的第二个实例时， 系统会通过发出`onen-file`和`open-url`事件来自动强制执行单个实例。但当用户在命令行中启动应用程序时，系统的单实例机制将被绕过，必须手动调用 requestSingleInstanceLock 来确保单例
+
+4. 浏览器中输入协议可打开 app
+
+```
+useful-electron-app://
+```
+
+如果需要自定义项目的 protocols， 需要更改`config/electron-builder`下 yml 文件中的`protocols`字段和`config/main/env`下的环境变量文件中的`DEFAULT_PROTOCOL_CLIENT`变量
 
 # TODOS
 

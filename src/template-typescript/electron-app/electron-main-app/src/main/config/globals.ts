@@ -15,9 +15,11 @@ const isProd = appEnv === AppEnv.PROD || appEnv === AppEnv.RC
 const htmlPath = isDev ? `http://localhost:${env.RENDERER_PORT || 3000}` : path.join(__dirname, '../..', 'dist/renderer/index.html')
 const logPath = path.join(tmpdir, env.LOG_FOLDER)
 const logName = 'app.log'
+const protocol = env.DEFAULT_PROTOCOL_CLIENT
 console.log('主进程环境：', appEnv, process.env.NODE_ENV)
 console.log('日志文件路径：', path.join(logPath, logName));
 console.log('Webview路径：', htmlPath);
+console.log('应用Deeplink协议', protocol)
 
 export const Globals = {
 	APP_ENV: appEnv,
@@ -25,5 +27,6 @@ export const Globals = {
 	IS_PROD: isProd,
 	WEBVIEW_ROOT_URL: htmlPath,
 	LOG_PATH: logPath,
-	LOG_NAME: logName
+	LOG_NAME: logName,
+	DEFAULT_PROTOCOL_CLIENT: protocol
 };

@@ -19,6 +19,8 @@ function createBrowserWindow(
 export default class WindowManager {
 	private static _manager: WindowManager;
 
+	private mainWindow: BrowserWindow
+
 	public static getInstance(): WindowManager {
 		if (!this._manager) {
 			this._manager = new WindowManager();
@@ -48,10 +50,21 @@ export default class WindowManager {
 
 		const mainWin = createBrowserWindow(options, url);
 
+		this.mainWindow = mainWin
+
 		if (openDevTools) {
 			mainWin.webContents.openDevTools();
 		}
 
 		return mainWin;
+	}
+
+	public focusMainWindow = (): BrowserWindow => {
+		if (this.mainWindow) {
+			if (this.mainWindow.isMinimized()) this.mainWindow.restore()
+			this.mainWindow.focus()
+		}
+
+		return this.mainWindow
 	}
 }
