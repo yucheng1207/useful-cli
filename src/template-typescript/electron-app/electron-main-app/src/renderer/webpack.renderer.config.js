@@ -45,6 +45,7 @@ let rendererConfig = {
         filename: '[name].js',
         libraryTarget: 'commonjs2',
         path: cfg_paths.output,
+        publicPath: '.', // html所在路径，配置以后html更改才能触发热重载
     },
     plugins: [
         new webpack.NoEmitOnErrorsPlugin(),

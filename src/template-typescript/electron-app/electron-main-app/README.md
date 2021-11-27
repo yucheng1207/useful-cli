@@ -18,14 +18,14 @@ yarn pack:[platform]:[env]
 
 ## 资料
 
-[electron 官网](https://www.electronjs.org/zh/docs/latest/tutorial/quick-start)
-[electron-builder](https://github.com/electron-userland/electron-builder)
-[electron 环境变量](https://www.electronjs.org/docs/latest/api/environment-variables)
-[boilerplates](https://www.electron.build/#boilerplates)
+-   [electron 官网](https://www.electronjs.org/zh/docs/latest/tutorial/quick-start)
+-   [electron-builder](https://github.com/electron-userland/electron-builder)
+-   [electron 环境变量](https://www.electronjs.org/docs/latest/api/environment-variables)
+-   [boilerplates](https://www.electron.build/#boilerplates)
 
 ## node 版本
 
-v16.11.1
+开发此模板时使用的是 v14.18.1 或 v16.11.1，如果遇到 node 版本问题，建议切换到这两个版本
 
 ## 本地调试
 
@@ -45,13 +45,21 @@ v16.11.1
 
 参考了[electron-vue](https://github.com/SimulatedGREG/electron-vue/blob/master/template/.electron-vue/dev-runner.js)的 dev-runner 实现热重载功能
 
+#### 主进程热重载
+
+主进程文件修改时重启 electron，详情请看`scripts/dev-runner.js`
+
+#### 渲染进程热重载
+
+渲染进程本地运行时使用`webpack-dev-server`起一个 server，修改渲染进程文件会触发网页重新加载， 详情看渲染进程的`electron-dev-runner.js`渲染进程启动文件
+
 ### 设置调试端口号
 
 更改 `scripts/common/paths.js` 中的 `rendererPort` 可以设置本地运行时调试的端口号
 
 ### 渲染进程配置
 
-本项目渲染进程是一个最简单的 webpack 工程，实际开发中直接整个替换成其他业务工程，只需注意一下几点配置：
+本项目渲染进程是一个最简单的 webpack 工程，实际开发中可以直接将渲染进程代码(src/renderer)`整个替换`成其他框架的代码，只需注意一下几点配置：
 
 1. 编写渲染进程的启动脚本：我们提供了一个模板(`scripts/renderer/electron-dev-runner.js`)，可以参考这个模板来编写，建议直接将模板拷贝到渲染进程目录后根据实际业务进行修改。同时将`path.rendererDevRunnerPath`设置为渲染进程中启动脚本(`electron-dev-runner`)所在位置
 2. 渲染进程的`package.json`中添加渲染进程编译命令，默认识别的编译命令是`yarn build:[env]`，如果不是请修改`buildRenderer.js`文件。同时修改`paths.rendererOutput`为编译输出路径
@@ -157,13 +165,14 @@ Logger.info('hello');
 
 ## 主进程和渲染进程通信
 
-[官方教程](https://www.electronjs.org/zh/docs/latest/api/ipc-main)
+-   [官方教程](https://www.electronjs.org/zh/docs/latest/api/ipc-main)
 
 ## URL 远程启动（Deep Link）
 
 参考：
-[官方教程](https://www.electronjs.org/zh/docs/latest/tutorial/launch-app-from-url-in-another-app)
-[electron-deep-linking-mac-win](https://github.com/oikonomopo/electron-deep-linking-mac-win)
+
+-   [官方教程](https://www.electronjs.org/zh/docs/latest/tutorial/launch-app-from-url-in-another-app)
+-   [electron-deep-linking-mac-win](https://github.com/oikonomopo/electron-deep-linking-mac-win)
 
 1. 设置 schemes， 使用 electron-builder 打包加上 protocols 配置项
 
@@ -195,7 +204,3 @@ useful-electron-app://
 ```
 
 如果需要自定义项目的 protocols， 需要更改`config/electron-builder`下 yml 文件中的`protocols`字段和`config/main/env`下的环境变量文件中的`DEFAULT_PROTOCOL_CLIENT`变量
-
-# TODOS
-
--   热重载(electron-reload)

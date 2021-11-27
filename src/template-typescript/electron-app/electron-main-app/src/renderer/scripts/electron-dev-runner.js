@@ -47,7 +47,7 @@ function startRenderer(port = 3000) {
 
             const server = new WebpackDevServer(compiler, {
                 quiet: true,
-                hot: true,
+                hot: true, //开启热更新，
                 before(app, ctx) {
                     ctx.middleware.waitUntilValid(() => {
                         resolve();
