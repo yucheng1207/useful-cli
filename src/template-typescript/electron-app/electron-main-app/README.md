@@ -155,6 +155,10 @@ import { Logger } from './managers/LoggerManager';
 Logger.info('hello');
 ```
 
+## 主进程和渲染进程通信
+
+https://www.electronjs.org/zh/docs/latest/api/ipc-main
+
 # TODOS
 
 -   热重载(electron-reload)

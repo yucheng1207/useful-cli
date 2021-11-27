@@ -2,24 +2,31 @@ import { app, BrowserWindow } from 'electron';
 import { Logger } from '@/managers/LoggerManager';
 import WindowManager from '@/managers/WindowManager';
 import { Globals } from '@/config/globals';
+import IPCMainManager from './ipc/IPCMainManager';
 
-function createWindow() {
+function initMainWindow() {
 	return WindowManager.getInstance().createMainWindow(
 		Globals.WEBVIEW_ROOT_URL,
 		!Globals.IS_PROD
 	)
 }
 
+function initMainIpc(win: BrowserWindow) {
+	return IPCMainManager.getInstance().init(win)
+}
+
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-	createWindow();
 	Logger.info('app ready')
+	const win = initMainWindow();
+	initMainIpc(win)
 	app.on('activate', function () {
 		// On macOS it's common to re-create a window in the app when the
 		// dock icon is clicked and there are no other windows open.
-		if (BrowserWindow.getAllWindows().length === 0) createWindow();
+		if (BrowserWindow.getAllWindows().length === 0) initMainWindow();
 	});
 });
 
