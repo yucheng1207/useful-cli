@@ -1,5 +1,6 @@
 import * as os from 'os'
 import * as path from 'path';
+import { app } from 'electron';
 export enum AppEnv {
 	DEV = 'development',
 	TEST = 'test',
@@ -20,13 +21,20 @@ console.log('主进程环境：', appEnv, process.env.NODE_ENV)
 console.log('日志文件路径：', path.join(logPath, logName));
 console.log('Webview路径：', htmlPath);
 console.log('应用Deeplink协议', protocol)
+console.log('userData:', app.getPath('userData'))
+console.log('appData:', app.getPath('appData'))
+console.log('cache:', app.getPath('cache'))
+console.log('temp:', app.getPath('temp'))
 
 export const Globals = {
-	APP_ENV: appEnv,
-	IS_DEV: isDev,
-	IS_PROD: isProd,
-	WEBVIEW_ROOT_URL: htmlPath,
-	LOG_PATH: logPath,
-	LOG_NAME: logName,
-	DEFAULT_PROTOCOL_CLIENT: protocol
+	RELEASE_HOST: '',	// 查询发布信息api的Host
+	RELEASE_APP_ID: '', // 查询发布信息api的AppId
+	DOWNLOAD_URL: '', // 最新软件下载地址，应用更新失败时提示用
+	APP_ENV: appEnv, // 应用环境变量
+	IS_DEV: isDev, // 是否是开发环境
+	IS_PROD: isProd, // 是否是正式环境
+	WEBVIEW_ROOT_URL: htmlPath, // 渲染进程路径
+	LOG_PATH: logPath, // 日志文件所在路径
+	LOG_NAME: logName, // 日志文件名称
+	DEFAULT_PROTOCOL_CLIENT: protocol, // 应用Deeplink协议
 };

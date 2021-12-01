@@ -1,13 +1,26 @@
-enum IPCMainChannelName {
-	RENDERER_READY = "RENDERER_READY",
-}
 
-
-enum IPCRenderChannelName {
+enum IPCMainToRenderChannelName {
 	MAIN_INFO = "MAIN_INFO",
+	DISPLAY_MASK_NOTIFICATION = "DISPLAY_MASK_NOTIFICATION",
+
+	// hotUpdateDialogWindow专用的ipc
+	HOT_UPDATE_DIALOG_INFO_UPDATE = "HOT_UPDATE_DIALOG_INFO_UPDATE",
+	// alertDialogWindow专用的ipc
+	MAIN_ALERT_DIALOG_INFO_UPDATE = "MAIN_ALERT_DIALOG_INFO_UPDATE"
+
 }
+
+enum IPCRendererToMainChannelName {
+	RENDERER_READY = "RENDERER_READY",
+
+	// hotUpdateDialogWindow专用的ipc
+	HOT_UPDATE_DIALOG_CALLBACK = "HOT_UPDATE_DIALOG_CALLBACK",
+	// alertDialogWindow专用的ipc
+	MAIN_ALERT_DIALOG_CALLBACK = "MAIN_ALERT_DIALOG_CALLBACK",
+}
+
 
 export {
-	IPCRenderChannelName,
-	IPCMainChannelName,
+	IPCMainToRenderChannelName,
+	IPCRendererToMainChannelName,
 };

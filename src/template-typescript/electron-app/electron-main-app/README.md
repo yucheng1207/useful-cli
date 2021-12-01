@@ -145,6 +145,43 @@ yarn build:[env]
 yarn pack:[platform]:[env]
 ```
 
+## 应用更新 & 热更新
+
+-   应用更新的可以理解为整个应用的更新（包括主进程和渲染进程），electron 提供了官方的解决方案，当需要应用更新时会下载最新的安装包，然后重新安装应用
+
+-   热更新可以理解为渲染进程的更新，很多时候我们的修改点只涉及到渲染进程，没必要重新安装应用，只需要将渲染进程的文件更新一下即可，类似于线上补丁的方式，electron 官方没有提供对应的解决方案，本项目自行研发了一套热更新方案
+
+### 应用更新
+
+注意： 要使用自动更新功能需要先去[签名](https://www.electron.build/code-signing)
+
+-   [autoUpdater](https://www.electronjs.org/zh/docs/latest/api/auto-updater)
+-   [electron-builder auto-update](https://www.electron.build/auto-update)
+
+1. 安装`electron-updater`依赖
+
+```
+yarn add electron-updater
+```
+
+2. 配置`electron-builder`配置文件（yml 文件）中的[publish 选项](https://www.electron.build/configuration/publish)
+   有多种方式获取最新的安装信息，github、自定义路径等等(github 国内访问貌似有点不稳定)，可以自己的业务选择不同的方式，本项目使用的是自定义路径的方式，配置`provider`为`generic`，然后将 url 设置为最新安装包的存放位置，如可以将打包后的文件(realease-builds 下的文件)**上传到阿里 oss**上，然后将 url 设置为 oss 路径。配置完成后 electron 应用会自动去获取 url 下的 yml 文件（mac 识别的是 latest-mac.yml 文件，win 识别的是 latest.yml 文件），yml 可以得到版本号，最新安装包路径信息
+
+```yml
+publish:
+    - provider: generic
+      url: 'xxxx' # 静态文件路径，可以将打包输出的文件存放到oss上，然后将url配置为oss存放路径
+```
+
+3. 使用`electron-updater`的`checkForUpdates`方法检查是否有更新， 详细代码请看`updater/AutoUpdater`文件
+   经过上一步配置，应用执行`checkForUpdates`可以获取到最新的版本号，跟当前版本号作对比来判断是否要更新，如要更新则会去下载最新安装包，整个过程会触发相应的钩子函数
+
+总流程：设置应用版本(主进程 package.json 的 version 字段) -> 打包并将打包生成的文件(release-builds)上传到 oss 上，oss 路径为`electron-build.yml`publish 自动中的 url -> 打开应用，应用会调用`electron-updater`的`checkForUpdates`检查是否有更新，如果有则下载安装包并重新安装，如果没有则检查是否有热更新
+
+### 热更新
+
+跟应用更新不同，热更新仅需要以打补丁的方式替换渲染进程代码
+
 ## 环境变量
 
 使用`dotenv-webpack`进行配置
@@ -162,6 +199,10 @@ yarn pack:[platform]:[env]
 import { Logger } from './managers/LoggerManager';
 Logger.info('hello');
 ```
+
+## 应用本地存储
+
+使用[Nedb](https://github.com/louischatriot/nedb)嵌入式数据库管理本地数据
 
 ## 主进程和渲染进程通信
 

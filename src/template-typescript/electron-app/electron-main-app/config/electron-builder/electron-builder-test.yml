@@ -16,9 +16,9 @@ files:
           - dist/**/* # 编译后的文件
           #   - node_modules/**/* # 依赖文件，使用webpack打包不需要node_modules了
 
-# publish:
-#     - provider: generic
-#       url: "" # publish api
+publish:
+    - provider: generic
+      url: '' # TODO：配置应用更新路径，可以是oss路径
 
 nsis:
     oneClick: false # 是否一键安装(静默安装)

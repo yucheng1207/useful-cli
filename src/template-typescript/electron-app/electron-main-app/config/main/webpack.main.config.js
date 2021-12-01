@@ -1,6 +1,7 @@
 'use strict';
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const { paths } = require('../../scripts/common/paths');
 
@@ -56,6 +57,18 @@ let mainConfig = {
         }),
         new webpack.DefinePlugin({
             'process.env.RENDERER_PORT': paths.rendererPort,
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: paths.mainPublic,
+                    to: paths.mianDist,
+                },
+                {
+                    from: paths.mainPkgJson,
+                    to: paths.mianDist,
+                },
+            ],
         }),
     ],
     target: 'electron-main',

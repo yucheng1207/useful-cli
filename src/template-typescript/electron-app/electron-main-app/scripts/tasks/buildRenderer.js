@@ -45,7 +45,16 @@ async function buildRenderer() {
     //     });
 }
 
-const build = gulp.series(cleanRenderer, buildRenderer, copyToDist);
+async function copyRendererPkgJson() {
+    execSync(`cp -rf ${paths.rendererPkgJson} ${paths.rendererOutput}`);
+}
+
+const build = gulp.series(
+    cleanRenderer,
+    buildRenderer,
+    copyRendererPkgJson,
+    copyToDist
+);
 
 module.exports = {
     build,

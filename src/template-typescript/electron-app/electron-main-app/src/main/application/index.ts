@@ -5,6 +5,10 @@ import { Logger } from '../managers/LoggerManager/index';
 import WindowManager from '../managers/WindowManager/index';
 import IPCMainManager from '../ipc/IPCMainManager';
 import { MARKS } from '../config/PerformanceMarks';
+import AutoUpdater from '../updater/AutoUpdater';
+import DialogManager from '../managers/DialogManager/index';
+import NeDBManager from '../store/NeDBManager';
+import StoreConfigs from '../store/StoreConfigs'
 
 /**
  * Measure performance
@@ -41,6 +45,7 @@ class Application {
 
 		this.configDialog();
 		this.setDeepLink();
+		this.neDBInit();
 
 		// Electron 在完成初始化，并准备创建浏览器窗口时，
 		// 会调用这个方法。
@@ -48,11 +53,11 @@ class Application {
 		// _app.on('ready', () => {
 		_app.whenReady().then(() => {
 			this.onAppReady()
-			_app.on('activate', function () {
-				// On macOS it's common to re-create a window in the app when the
-				// dock icon is clicked and there are no other windows open.
-				if (BrowserWindow.getAllWindows().length === 0) this.onAppReady();
-			});
+			// _app.on('activate', function () {
+			// 	// On macOS it's common to re-create a window in the app when the
+			// 	// dock icon is clicked and there are no other windows open.
+			// 	if (BrowserWindow.getAllWindows().length === 0) this.onAppReady();
+			// });
 		});
 
 		// 在除 MacOS 的其他平台上，当所有窗口关闭后，退出当前应用。
@@ -126,32 +131,81 @@ class Application {
 		performance.mark(MARKS.APP_READY);
 		performance.measure("App Ready", MARKS.APP_START, MARKS.APP_READY);
 		Logger.info("App Ready");
-		// // create loading window
-		// const loading = WindowManager.getInstance().createLoadingWindow();
-
+		Logger.info("Webview Url:" + Globals.WEBVIEW_ROOT_URL);
 
 		try {
-			Logger.info("Webview Url:" + Globals.WEBVIEW_ROOT_URL);
-
+			const loadingWindow = WindowManager.getInstance().createLoadingWindow();
 			performance.mark(MARKS.MAIN_WINDOW_START);
+			this._mainWindow = WindowManager.getInstance().createMainWindow({
+				hide: true, // 等加载完毕后（ready-to-show）再展示，在这之前显示的是loading window
+				url: Globals.WEBVIEW_ROOT_URL,
+				openDevTools: !Globals.IS_PROD,
+				beforeLoad: (win: BrowserWindow) => {
+					// before window load， 注意这里this._mainWindow还没有赋值的
+					IPCMainManager.getInstance().init(win);
+					DialogManager.getInstance().init(win, this._app);
+					AutoUpdater.getInstance().init(win, this._app);
+					AutoUpdater.getInstance().beforeHotUpdateCheck() // 在主窗体创建前需要检查热更新的异常情况, 执行前确保IPCMainManager 和 DialogManager 已经被初始化
+					this.setGlobalShortcut();
+					this.setupMenu();
 
-			this._mainWindow = WindowManager.getInstance().createMainWindow(
-				Globals.WEBVIEW_ROOT_URL,
-				!Globals.IS_PROD
-			)
-
-			IPCMainManager.getInstance().init(this._mainWindow)
-			this.setGlobalShortcut();
-			this.setupMenu();
+				}
+			})
 
 			this._mainWindow.webContents.once('dom-ready', () => {
 				performance.mark(MARKS.MAIN_WINDOW_WEBCONTENT_READY);
 				performance.measure("Main window webcontent ready", MARKS.MAIN_WINDOW_START, MARKS.MAIN_WINDOW_WEBCONTENT_READY);
 			});
 
-			// this._mainWindow.on('close', function (e) {
-			// 	e.preventDefault(); // 拦截应用关闭
-			// });
+			this._mainWindow.once("ready-to-show", () => {
+				loadingWindow.close();
+				this._mainWindow.show();
+			});
+
+			this._mainWindow.once("show", () => {
+				// 确保应用更新弹框和热更新弹框可以正常显示
+				AutoUpdater.getInstance().checkUpdate();
+			});
+
+			this._mainWindow.on('close', async (e) => {
+				console.log('app close')
+				// e.preventDefault(); // 拦截应用关闭
+				// const option: MessageBoxOptions = {
+				// 	title: '友情提示',
+				// 	type: 'info',
+				// 	message: `确定要退出吗?`,
+				// 	detail: '',
+				// 	defaultId: 0,
+				// 	buttons: ['确定', '取消'],
+				// }
+				// const { response } = await DialogManager.getInstance().showMessageBox({ ...option, modal: true })
+				// if (response === 0) {
+				// 	setImmediate(() => {
+				// 		WindowManager.getInstance().destoryMainWindow()
+				// 		app.quit()
+				// 	})
+				// }
+
+				// DialogManager.getInstance().showAlertDialog({
+				// 	width: 440,
+				// 	height: 200,
+				// 	key: 'quit tip',
+				// 	title: '友情提示',
+				// 	text: '确定要退出吗?',
+				// 	hasShadow: true,
+				// 	buttonType: 'default',
+				// 	mainButton: {
+				// 		text: '取消'
+				// 	},
+				// 	secondaryButton: {
+				// 		text: '确定'
+				// 	},
+				// 	onSecondaryCallback: () => {
+				// 		WindowManager.getInstance().destoryMainWindow()
+				// 		app.quit()
+				// 	},
+				// })
+			});
 		}
 		catch (err) {
 			console.error('onAppReady Error', err)
@@ -186,6 +240,19 @@ class Application {
 			}
 		]);
 		Menu.setApplicationMenu(menu);
+	}
+
+	private async neDBInit() {
+		try {
+			// create db
+			for (const config of StoreConfigs) {
+				await NeDBManager.getInstance().addDataStore(config.name, config.options);
+			}
+		}
+		catch (err) {
+			console.error(err);
+			Logger.error(err);
+		}
 	}
 
 	/**

@@ -23,7 +23,11 @@ function buildMain() {
         });
 }
 
-const build = gulp.series(cleanMain, buildMain);
+async function copyMainPkgJson() {
+    execSync(`cp -rf ${paths.mainPkgJson} ${paths.mianDist}`);
+}
+
+const build = gulp.series(cleanMain, buildMain, copyMainPkgJson);
 
 module.exports = {
     build,
