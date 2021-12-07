@@ -1,6 +1,6 @@
 {
     "name": "useful-cli",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "A useful front-end scaffolding",
     "main": "src/index.js",
     "bin": {

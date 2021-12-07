@@ -1,5 +1,7 @@
 rm -rf src/template-typescript/*/node_modules
 rm -rf src/template-typescript/*/**/node_modules
+rm -rf src/template-typescript/*/**/**/node_modules
+rm -rf src/template-typescript/*/**/**/**/node_modules
 rm -rf src/template-typescript/typescript-app/bld
 rm -rf src/template-typescript/react-app/build
 rm -rf src/template-typescript/wechat-miniprogram/dist
@@ -7,3 +9,4 @@ rm -rf src/template-typescript/vite-vue3-app/dist
 rm -rf src/template-typescript/vue3-app/dist
 rm -rf src/template-typescript/electron-app/electron-main-app/dist
 rm -rf src/template-typescript/electron-app/electron-main-app/release-builds
+rm -rf src/template-typescript/electron-app/electron-main-app/src/renderer/dist

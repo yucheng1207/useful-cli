@@ -76,7 +76,7 @@ async function createWechatMiniprogram(name) {
 }
 
 async function createElectronMainApp(name) {
-    await createProject(name, templateRoot);
+    await createProject(name, templateRoot.electronMainApp);
 }
 
 module.exports = {
