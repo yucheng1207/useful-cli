@@ -19,6 +19,7 @@ const paths = {
     rendererPort: 3000, // 渲染进程本地运行时的端口号
     rendererOutput: resolveApp('src/renderer/dist'), // 渲染进程webpack打包后输出路径， 需要根据具体的渲染进程进行配置
     rendererDist: resolveApp('dist/renderer'), // 渲染进程代码最终输出目录，编译过程中会将rendererOutput中的内容拷贝到该目录下作为应用打包时渲染进程代码
+    rendererRelease: resolveApp('dist/renderer-release'), // 渲染进程代码打包后的文件，上传到oss用于热更新
     rendererSrc: resolveApp('src/renderer'), // 渲染进程代码目录，在编译过程中会将该目录作为编译渲染进程的工作目录
     rendererPkgJson: resolveApp('src/renderer/package.json'), // 渲染进程package.json文件
     rendererDevRunnerPath: resolveApp(

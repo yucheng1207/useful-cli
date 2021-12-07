@@ -27,8 +27,6 @@ console.log('cache:', app.getPath('cache'))
 console.log('temp:', app.getPath('temp'))
 
 export const Globals = {
-	RELEASE_HOST: '',	// 查询发布信息api的Host
-	RELEASE_APP_ID: '', // 查询发布信息api的AppId
 	DOWNLOAD_URL: '', // 最新软件下载地址，应用更新失败时提示用
 	APP_ENV: appEnv, // 应用环境变量
 	IS_DEV: isDev, // 是否是开发环境

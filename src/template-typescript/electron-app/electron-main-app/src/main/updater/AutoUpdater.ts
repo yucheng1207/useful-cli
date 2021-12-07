@@ -12,6 +12,9 @@ const pkg = require('../../../package.json');
 
 const appFolderPath = path.join(process.resourcesPath, "/app")
 const downloadCachePath = path.join(appFolderPath, 'dist/download')
+const rendererPublishOssBaseUrl = 'xxx'
+const rendererPublishOssRelativePath = `/demo/zyc/renderer/${Globals.APP_ENV}`
+const rendererPublishUrl = `${rendererPublishOssBaseUrl}/${rendererPublishOssRelativePath}` // TODO: 设置渲染进程补丁包在oss上的存储路径，该路径要跟部署热更新时的地址一样(部署热更新脚本为：scripts/tasks/publishRenderer)
 const rendererRemoteYmlAssetName = 'latest.yml' // 渲染进程部署时上传到oss的yml名称
 const rendererRemoteZipAssetName = 'dist.zip'   // 渲染进程部署时上传到oss的zip名称
 export const autoupdateConfig = {
@@ -21,6 +24,7 @@ export const autoupdateConfig = {
 	rendererPath: path.join(appFolderPath, 'dist/renderer'),
 	rendererHtmlPath: path.join(appFolderPath, 'dist/renderer/index.html'),
 	rendererBakPath: path.join(appFolderPath, 'dist/renderer_bak'),
+	rendererPublishUrl,
 	rendererRemoteYmlAssetName,
 	rendererRemoteZipAssetName,
 	rendererYmlLocalCache: path.join(downloadCachePath, rendererRemoteYmlAssetName),
@@ -133,6 +137,7 @@ export default class AutoUpdater {
 	 * 检查是否有热更新
 	 */
 	public checkHotUpdate(): void {
+		console.log('Start CheckHotUpdate')
 		this.hotUpdater.checkForUpdates();
 
 		this.hotUpdater.on(UpdateEvent.ERROR, (errorType: ErrorType, err?: any) => {

@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron'
 import { readFileSync } from 'fs'
-import { getLatestRelease, downloadFile, AppType } from './GenericRelease'
+import { downloadFile, getLatestReleaseYml } from './GenericRelease';
 import { readFileAsync, deleteFile, renameAsyncWithRetry, deleteFileInDir, existsAsync } from '../utils/fsAsync'
 import { extractZip } from './Zip'
 import { Logger } from '../managers/LoggerManager/index';
@@ -174,8 +174,13 @@ export default class HotUpdater {
 
 	public async checkForUpdates(): Promise<void> {
 		try {
-			const { appVersion, rendererPackageJson, rendererRemoteYmlAssetName, rendererRemoteZipAssetName, rendererYmlLocalCache } = autoupdateConfig
-			const releaseInfo = await getLatestRelease(AppType.BUNDLE)
+			const { appVersion, rendererPackageJson, rendererPublishUrl, rendererRemoteYmlAssetName, rendererRemoteZipAssetName, rendererYmlLocalCache } = autoupdateConfig
+			// const releaseInfo = await getLatestRelease(AppType.BUNDLE)
+			const releaseInfo = await getLatestReleaseYml(`${rendererPublishUrl}/${rendererRemoteYmlAssetName}`)
+
+			Logger.info('releaseInfo')
+			Logger.info(releaseInfo)
+
 			const packageJsonString = await readFileAsync(rendererPackageJson)
 			const packageJson = JSON.parse(packageJsonString)
 
@@ -211,6 +216,9 @@ export default class HotUpdater {
 				else {
 					this.emit(UpdateEvent.ERROR, ErrorType.RELEASE_ASSERT_INCOMPLETE)
 				}
+			} else {
+				Logger.info(`No hot update required: online version(${releaseBundleVersion}) and current version(${localBundleVersion})`)
+				this.emit(UpdateEvent.UPDATE_NOT_AVAILABLE)
 			}
 		}
 		catch (err) {

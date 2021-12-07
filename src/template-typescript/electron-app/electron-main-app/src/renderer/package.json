@@ -3,6 +3,13 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.ts",
+    "appRelease": {
+        "release": true,
+        "appMinVersion": "1.0.0",
+        "appMaxVersion": "2.0.0",
+        "title": "",
+        "description": ""
+    },
     "scripts": {
         "dev": "node ./scripts/electron-dev-runner.js",
         "build": "node scripts/build",

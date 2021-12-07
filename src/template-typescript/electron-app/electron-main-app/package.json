@@ -17,7 +17,13 @@
         "pack:mac:rc": "yarn build:rc --platform=mac --pack",
         "pack:win:rc": "yarn build:rc --platform=win --pack",
         "pack:mac:prod": "yarn build:prod --platform=mac --pack",
-        "pack:win:prod": "yarn build:prod --platform=win --pack"
+        "pack:win:prod": "yarn build:prod --platform=win --pack",
+        "only:publish:app:test": "NODE_ENV=test gulp only-publish-app",
+        "only:publish:app:rc": "NODE_ENV=production:rc gulp only-publish-app",
+        "only:publish:app:prod": "NODE_ENV=production gulp only-publish-app",
+        "publish:renderer:test": "NODE_ENV=test gulp publish-renderer",
+        "publish:renderer:rc": "NODE_ENV=production:rc gulp publish-renderer",
+        "publish:renderer:prod": "NODE_ENV=production gulp publish-renderer"
     },
     "repository": "",
     "keywords": [
@@ -42,6 +48,7 @@
         "eslint": "^7.32.0",
         "gulp": "^4.0.2",
         "minimist": "^1.2.5",
+        "single-line-log": "^1.1.2",
         "ts-loader": "^9.2.6",
         "typescript": "^4.4.4",
         "webpack": "^5.64.1",
@@ -49,6 +56,7 @@
     },
     "dependencies": {
         "adm-zip": "^0.5.9",
+        "ali-oss": "^6.16.0",
         "bunyan": "^1.8.15",
         "compare-versions": "^3.6.0",
         "electron-updater": "^4.6.1",

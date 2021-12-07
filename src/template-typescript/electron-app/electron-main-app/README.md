@@ -10,8 +10,14 @@ yarn dev
 # 编译
 yarn build:[env]
 
-# 打包
+# 打包应用
 yarn pack:[platform]:[env]
+
+# 部署应用，该命令会将release-builds中的内容部署到线上，所以部署前需要先打包应用，部署新版本会触发应用更新
+yarn only:publish:app:[env]
+
+# 部署webview(渲染进程)，该命令编译打包渲染进程代码并将其部署到线上，部署新版本会触发热更新
+yarn publish:renderer:[env]
 ```
 
 # 项目搭建
@@ -180,7 +186,46 @@ publish:
 
 ### 热更新
 
-跟应用更新不同，热更新仅需要以打补丁的方式替换渲染进程代码
+跟应用更新不同，热更新仅需要以打补丁的方式替换渲染进程代码，由于官方没有热更新方案，所以本项目配合阿里云 oss 实现了一套热更新解决方案
+
+1. 设置渲染进程 package.json 中的`version`字段和`appRelease`字段后编译渲染进程代码
+
+```json
+{
+    "version": "1.0.0",
+    "appRelease": {
+        "release": true,
+        "appMinVersion": "1.0.0",
+        "appMaxVersion": "2.0.0",
+        "title": "",
+        "description": ""
+    }
+}
+```
+
+2. 将编译后的渲染进程代码打包压缩成一个 zip 文件(dist.zip)和 yml 文件(latest.yml)，具体代码看`scripts/tasks/publishRenderer`
+
+3. 将打包后的文件上传到 oss 上，路径可以带上环境变量和版本号
+
+4. 主进程检查是否有应用更新，如果没有则检查是否有热更新，监测方法为下载 oss 上的 latest.yml，并解析`version`、`appMinVersion`和`appMaxVersion`字段，根据这几个字段判断是否需要热更新
+
+5. 当需要热更新时先备份当前渲染进程代码，然后根据 yml 中的信息下载 dist.zip 文件，解压后将其替换成新的渲染进程代码，然后刷新页面。如果过程出现错误则恢复之前的渲染进程代码备份，具体看`src/main/updater`下的代码
+
+### 配置阿里 oss 路径
+
+代码中需要根据实际情况配置 oss 路径：
+
+#### 主进程
+
+1. 配置`config/electron-builder`下 yml 文件中的`publish`字段
+
+2. 配置`scripts/tasks/publishApp`中的`ossConfig`
+
+#### 渲染进程
+
+1. 配置`src/main/updater/AutoUpdater.ts`中的`rendererPublishUrl`
+
+2. 配置`scripts/tasks/publishRenderer`中的`ossConfig`
 
 ## 环境变量
 
@@ -245,3 +290,8 @@ useful-electron-app://
 ```
 
 如果需要自定义项目的 protocols， 需要更改`config/electron-builder`下 yml 文件中的`protocols`字段和`config/main/env`下的环境变量文件中的`DEFAULT_PROTOCOL_CLIENT`变量
+
+# TODOS
+
+-   打包应用时没有 zip 文件导致自动更新报错，等新版本的 autoUpdate 兼容无 zip 情况时再试试
+-   配置国际化

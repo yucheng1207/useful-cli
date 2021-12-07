@@ -1,12 +1,11 @@
 import * as path from 'path'
-import { Globals } from '../config/globals'
 const rp = require('request-promise')
 const request = require('request')
 const fs = require('fs')
+const jsyml = require('js-yaml');
 
-const HOST = Globals.RELEASE_HOST
-
-const APP_ID = Globals.RELEASE_APP_ID
+const HOST = 'xxx' // 查询发布信息api的Host
+const APP_ID = 'xxx' // 查询发布信息api的AppId
 
 export interface ReleaseInfo {
 	id: number,
@@ -27,9 +26,54 @@ export enum AppType {
 	BUNDLE = 'Bundle',
 }
 
+/**
+ * 获取最新release yml信息，这里直接读取的是yml路径，建议自定义一个接口(如下面的getLatestRelease函数)来识别yml信息
+ * @param {string} url yml文件远程路径
+ * @param {number} retryTimes 重试次数
+ * @returns
+ */
+export const getLatestReleaseYml = async (url: string, retryTimes = 3): Promise<ReleaseInfo> => {
+	const requestOptions = {
+		method: 'GET',
+		uri: url,
+		json: true,
+	};
+	try {
+		const ymlString = await rp(requestOptions);
+		const yamlObj = jsyml.safeLoad(ymlString);
+		const urlSplit = url.split('/');
+		const ymlName = urlSplit.pop();
+		const baseUrl = urlSplit.join('/')
+		const assets = yamlObj.files ? yamlObj.files.map((f: any) => ({
+			name: f.url,
+			url: `${baseUrl}/${f.url}`
+		})) : []
+		assets.push({
+			name: ymlName,
+			url: url,
+		})
+		return {
+			id: yamlObj.releaseDate || new Date().getTime(),
+			version: yamlObj.version,
+			title: yamlObj.title || '',
+			description: yamlObj.description || '',
+			release: yamlObj.release || true,
+			assets,
+		};
+	} catch (err) {
+		if (err && err.statusCode === 404) {
+			return null;
+		} else if (retryTimes > 0 && retryTimes--) {
+			const response = await getLatestReleaseYml(url, retryTimes);
+			return response;
+		} else {
+			throw err;
+		}
+	}
+};
 
 /**
- * 获取最新release api
+ * 获取最新release api - 自定义接口
  */
 export const getLatestRelease = async (type: AppType, retryTimes = 3): Promise<ReleaseInfo | null> => {
 	const requestOptions = {
@@ -57,7 +101,7 @@ export const getLatestRelease = async (type: AppType, retryTimes = 3): Promise<R
 }
 
 /**
- * 通过版本号获取最新release api
+ * 通过版本号获取最新release api - 自定义接口
  */
 export const getReleaseByVersion = async (version: string, type: AppType, retryTimes = 3): Promise<ReleaseInfo | null> => {
 	const requestOptions = {

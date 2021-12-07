@@ -6,7 +6,7 @@ const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
-// todo: 需要设置一下renderer的webpack.config
+// todo: 将该脚本拷贝到渲染进程时需要设置一下renderer的webpack.config
 const rendererConfig = require('renderer-webpack-config-path');
 
 function logStats(proc, data) {

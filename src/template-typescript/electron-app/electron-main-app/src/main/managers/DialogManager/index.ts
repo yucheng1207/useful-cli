@@ -207,7 +207,6 @@ export default class DialogManager {
 		}
 		else {
 			// hotUpdateDialog已存在，更新dialog中的信息
-			console.log('ooo', opts)
 			this.hotUpdateDialog && this.hotUpdateDialog.webContents.send(IPCMainToRenderChannelName.HOT_UPDATE_DIALOG_INFO_UPDATE, opts);
 		}
 	}

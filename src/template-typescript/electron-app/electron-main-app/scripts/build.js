@@ -11,16 +11,18 @@ const cmds = {
     buildMain: 'gulp build-main',
     packWin: 'gulp only-pack-win',
     packMac: 'gulp only-pack-mac',
+    publishApp: 'gulp only-publish-app',
 };
 
 const argv = minimist(process.argv.slice(2), {
-    boolean: ['help', 'clean', 'compileRenderer', 'compileMain'],
+    boolean: ['help', 'clean', 'buildRenderer', 'buildMain', 'pack', 'publish'],
     default: {
         help: false,
         clean: false,
         pack: false,
-        compileRenderer: true,
-        compileMain: true,
+        publish: false,
+        buildRenderer: true,
+        buildMain: true,
         env: 'test',
         platform: 'mac',
     },
@@ -28,7 +30,7 @@ const argv = minimist(process.argv.slice(2), {
 });
 
 async function build(argv) {
-    const { compileRenderer, compileMain, pack, env, platform } = argv;
+    const { buildRenderer, buildMain, pack, publish, env, platform } = argv;
     const isVaildEnv = envs.includes(env);
     const isVaildPlatform = platforms.includes(platform);
 
@@ -40,9 +42,9 @@ async function build(argv) {
     }
 
     // 编译渲染进程
-    compileRenderer && execSync(`NODE_ENV=${env} ${cmds.buildRenderer}`);
+    buildRenderer && execSync(`NODE_ENV=${env} ${cmds.buildRenderer}`);
     // 编译主进程
-    compileMain && execSync(`NODE_ENV=${env} ${cmds.buildMain}`);
+    buildMain && execSync(`NODE_ENV=${env} ${cmds.buildMain}`);
     // 打包
     pack &&
         execSync(
@@ -50,11 +52,14 @@ async function build(argv) {
                 platform === 'win' ? cmds.packWin : cmds.packMac
             }`
         );
+
+    // 部署
+    publish && execSync(`NODE_ENV=${env} ${cmds.publishApp}`);
 }
 
 async function main() {
     const { help, clean } = argv;
-    // console.log('argv', argv);
+    console.log('argv', argv);
     try {
         if (help) {
             printHelp();
@@ -77,11 +82,16 @@ function printHelp() {
     console.log(`${chalk.green('--pack')} - 是否要执行打包， 默认值为false\n`);
     console.log(
         `${chalk.green(
-            '--compileRenderer'
+            '--publish'
+        )} - 是否要部署app（将打包文件上传到oss）， 默认值为false\n`
+    );
+    console.log(
+        `${chalk.green(
+            '--buildRenderer'
         )} - 是否编译渲染进程代码，默认值为true\n`
     );
     console.log(
-        `${chalk.green('--compileMain')} - 是否编译主进程代码，默认值为true\n`
+        `${chalk.green('--buildMain')} - 是否编译主进程代码，默认值为true\n`
     );
     console.log(
         `${chalk.green('--env [env]')} - 打包编译的环境，可选值为【${chalk.blue(
