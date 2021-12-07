@@ -2,15 +2,11 @@
 
 一个有用的前端脚手架，支持创建 `微信小程序`、`vue`、`react` 和 `electron` 项目，脚手架搭建过程可以看这篇[掘金 blog](https://juejin.cn/post/6981631766406627364)。
 
-> [微信小程序](./src/template-typescript/wechat-miniprogram)
-
-> [react-ts](./src/template-typescript/react-app)
-
-> [vue3-ts(vite)](./src/template-typescript/vite-vue3-app)
-
-> [vue3-ts(vue-cli)](./src/template-typescript/vue3-app)
-
-> [electron-main-app](./src/template-typescript/wechat-miniprogram)
+-   [微信小程序](./src/template-typescript/wechat-miniprogram)
+-   [react-ts](./src/template-typescript/react-app)
+-   [vue3-ts(vite)](./src/template-typescript/vite-vue3-app)
+-   [vue3-ts(vue-cli)](./src/template-typescript/vue3-app)
+-   [electron-main-app](./src/template-typescript/electron-app/electron-main-app)
 
 ## 查看当前版本
 
