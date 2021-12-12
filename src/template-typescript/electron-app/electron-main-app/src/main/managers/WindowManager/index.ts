@@ -12,19 +12,22 @@ function createBrowserWindow(params: {
 	const { options, url, openDevTools, beforeLoad } = params
 	const window = new BrowserWindow(options);
 
-	if (url && url.includes('http')) {
-		beforeLoad && beforeLoad(window)
-		window.loadURL(url);
-	} else if (url && !url.includes('http')) {
-		beforeLoad && beforeLoad(window)
-		window.loadFile(url);
-	}
+	beforeLoad && beforeLoad(window)
+	loadWinURL(window, url)
 
 	if (openDevTools) {
 		window.webContents.openDevTools();
 	}
 
 	return window;
+}
+
+function loadWinURL(win: BrowserWindow, url: string): void {
+	if (url && url.includes('http')) {
+		win.loadURL(url);
+	} else if (url && !url.includes('http')) {
+		win.loadFile(url);
+	}
 }
 
 export default class WindowManager {
@@ -65,6 +68,10 @@ export default class WindowManager {
 		this.mainWindow = mainWin
 
 		return mainWin;
+	}
+
+	public reloadMainWindow = (url: string): void => {
+		this.mainWindow && loadWinURL(this.mainWindow, url)
 	}
 
 	public focusMainWindow = (): BrowserWindow => {

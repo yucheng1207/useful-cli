@@ -39,13 +39,13 @@ class Application {
 		return this._app;
 	}
 
-	public init(): void {
+	public async init(): Promise<void> {
 		performance.mark(MARKS.APP_START);
 		const _app = this.getApplication()
 
 		this.configDialog();
 		this.setDeepLink();
-		this.neDBInit();
+		await this.neDBInit();
 
 		// Electron 在完成初始化，并准备创建浏览器窗口时，
 		// 会调用这个方法。

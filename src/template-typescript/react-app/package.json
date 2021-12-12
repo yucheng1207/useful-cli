@@ -9,9 +9,12 @@
         "web-vitals": "^1.0.1"
     },
     "scripts": {
-        "dev": "./scripts/dev.sh",
+        "dev": "node ./scripts/dev-runner.js",
         "clean": "rm -rf wwwroot/dist/**",
-        "build": "useful-scripts build reactapp test",
+        "build:development": "useful-scripts build reactapp development",
+        "build:test": "useful-scripts build reactapp test",
+        "build:production:rc": "useful-scripts build reactapp production:rc",
+        "build:production": "useful-scripts build reactapp production",
         "lint": "eslint src/**/*.ts{,x}",
         "lint:fix": "eslint src/**/*.ts{,x} --fix"
     },
