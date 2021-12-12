@@ -10,11 +10,11 @@
     },
     "scripts": {
         "dev": "node ./scripts/dev-runner.js",
-        "clean": "rm -rf wwwroot/dist/**",
-        "build:development": "useful-scripts build reactapp development",
-        "build:test": "useful-scripts build reactapp test",
-        "build:production:rc": "useful-scripts build reactapp production:rc",
-        "build:production": "useful-scripts build reactapp production",
+        "clean": "rm -rf build/**",
+        "build:development": "yarn clean && useful-scripts build reactapp development",
+        "build:test": "yarn clean && useful-scripts build reactapp test",
+        "build:production:rc": "yarn clean && useful-scripts build reactapp production:rc",
+        "build:production": "yarn clean && useful-scripts build reactapp production",
         "lint": "eslint src/**/*.ts{,x}",
         "lint:fix": "eslint src/**/*.ts{,x} --fix"
     },
