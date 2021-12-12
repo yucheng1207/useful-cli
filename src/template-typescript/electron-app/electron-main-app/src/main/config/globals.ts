@@ -27,6 +27,7 @@ console.log('cache:', app.getPath('cache'))
 console.log('temp:', app.getPath('temp'))
 
 export const Globals = {
+	ENABLE_AUTO_UPDATE: false, // 是否开启自动更新功能, 开启前需要进行一些必要配置，具体可以看Readme中的”配置应用更新和热更新的 ali-oss 路径“小节
 	DOWNLOAD_URL: '', // 最新软件下载地址，应用更新失败时提示用
 	APP_ENV: appEnv, // 应用环境变量
 	IS_DEV: isDev, // 是否是开发环境

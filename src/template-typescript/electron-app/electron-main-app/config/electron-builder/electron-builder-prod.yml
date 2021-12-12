@@ -4,7 +4,7 @@ appId: com.example.app
 copyright: Example co
 # npmRebuild: false # 是否在开始编译前重构原生依赖,可先尝试true, 如果出现问题再修改为false
 
-asar: true
+asar: false
 
 directories:
     buildResources: build-assets/ # 默认：build
