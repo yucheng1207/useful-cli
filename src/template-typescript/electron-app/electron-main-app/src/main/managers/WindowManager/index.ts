@@ -58,8 +58,22 @@ export default class WindowManager {
 			backgroundColor: '#FFFFFF',
 			webPreferences: {
 				webSecurity: Globals.IS_PROD,
-				nodeIntegration: true, // https://github.com/electron/electron/issues/7300#issuecomment-493077796
-				contextIsolation: false, // https://www.electronjs.org/zh/docs/latest/tutorial/context-isolation
+				/**
+				 * nodeIntegration: 是否启用Node integration
+				 * issue reference: https://github.com/electron/electron/issues/7300#issuecomment-493077796
+				 */
+				nodeIntegration: true,
+				/**
+				 * contextIsolation: 是否在独立 JavaScript 环境中运行 Electron API和指定的preload 脚本. 默认为 true.
+				 * 参考资料：
+				 * [上下文隔离](https://www.electronjs.org/zh/docs/latest/tutorial/context-isolation)
+				 * [contextIsolation选项说明](https://www.electronjs.org/zh/docs/latest/api/browser-window#new-browserwindowoptions)
+				 * 打开远程链接如百度翻译等要设置为true网页才能正常工作。
+				 * 设置为false时渲染进程可以直接通过”const { shell, ipcRenderer } = require('electron')“发送消息了，为true是不可以，必须使用preload进行处理，方法看[这里](https://stackoverflow.com/questions/57807459/how-to-use-preload-js-properly-in-electron)
+				 * 编写preload参考：https://www.electronjs.org/zh/docs/latest/api/context-bridge
+				 */
+				contextIsolation: false,
+				// preload: path.join(__dirname, `./preload/preload.js`),
 			},
 			show: !hide,
 		};
