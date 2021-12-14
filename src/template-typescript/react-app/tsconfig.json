@@ -4,7 +4,7 @@
         "baseUrl": ".",
         "moduleResolution": "node",
         "target": "es6",
-        "jsx": "react",
+        "jsx": "react-jsx",
         "strict": false,
         "strictNullChecks": true,
         "rootDir": "src",
@@ -12,11 +12,7 @@
         "allowSyntheticDefaultImports": true,
         "sourceMap": true,
         "skipDefaultLibCheck": true,
-        "lib": ["es6", "dom"],
-        "paths": {
-            // Fixes "Duplicate identifier 'Redux'" error when packages were installed via Yarn (by specifying which .d.ts file is authoritative)
-            "redux": ["./node_modules/@types/redux/index"]
-        }
+        "esModuleInterop": true
     },
-    "exclude": ["bin", "node_modules"]
+    "include": ["src"]
 }

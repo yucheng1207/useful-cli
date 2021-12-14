@@ -7,7 +7,7 @@ module.exports = {
     env,
     port: 3000,
     resolveApp,
-    entryPath: () => resolveApp('src/boot-client.tsx'),
+    entryPath: () => resolveApp('src/index.tsx'),
     buildPath: () => resolveApp('build'),
     htmlPath: () => resolveApp('public/index.html'),
     imagesPath: () => resolveApp('src/images'),

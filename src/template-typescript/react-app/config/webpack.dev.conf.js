@@ -1,22 +1,24 @@
 'use strict';
-const baseConfig = require('./webpack.base.conf');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { merge } = require('webpack-merge');
+const baseWebpackConfig = require('./webpack.base.conf');
 const paths = require('./paths');
 
-module.exports = {
-    ...baseConfig,
+const devWebpackConfig = merge(baseWebpackConfig, {
+    mode: 'development',
     devServer: {
-        contentBase: paths.buildPath(),
         compress: true,
         historyApiFallback: true,
         hot: true,
         port: paths.port,
     },
     plugins: [
-        ...baseConfig.plugins,
+        ...baseWebpackConfig.plugins,
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',
         }),
     ],
-};
+});
+
+module.exports = devWebpackConfig;

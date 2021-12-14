@@ -4,30 +4,20 @@
 'use strict';
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const tsImportPluginFactory = require('ts-import-plugin');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
-const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const paths = require('./paths');
 
 const DEV = paths.env === 'development';
 
 module.exports = {
     context: __dirname,
-    entry: DEV
-        ? {
-              app: [
-                  'react-hot-loader/patch',
-                  `webpack-dev-server/client?http://localhost:${paths.port}`,
-                  paths.entryPath(),
-              ],
-          }
-        : {
-              app: paths.entryPath(),
-          },
-
+    target: 'web',
+    entry: {
+        app: paths.entryPath(),
+    },
     resolve: {
         alias: {
             src: paths.resolveApp('src'),
@@ -36,32 +26,27 @@ module.exports = {
     },
     output: {
         path: paths.buildPath(),
-        filename: 'app.bundle.js',
+        filename: '[name].js',
         publicPath: process.env.PUBLIC_URL || '',
     },
-    amd: {
-        // toUrlUndefined: true,
-    },
-    node: {
-        // Resolve node module use of fs
-        fs: 'empty',
-    },
-
     // Enable sourcemaps for debugging webpack's output.
-    devtool: DEV ? 'inline-eval-cheap-source-map' : 'source-map',
-
+    devtool: DEV ? 'eval' : false,
     externals: {},
     optimization: {
         splitChunks: {
             chunks: 'all',
-            name: true,
             cacheGroups: {
-                vendors: {
-                    enforce: true,
-                    test: /node_modules/,
-                    name: 'vendor',
-                    filename: DEV ? '[name].bundle.js' : '[name].[hash].js',
+                defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
                     priority: -10,
+                    reuseExistingChunk: true,
+                    filename: '[name].[fullhash].js',
+                    idHint: 'vendors',
+                },
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true,
                 },
             },
         },
@@ -69,6 +54,28 @@ module.exports = {
 
     module: {
         rules: [
+            {
+                test: /\.ts(x?)$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'ts-loader',
+                        options: {
+                            silent: true,
+                            transpileOnly: DEV ? false : true,
+                            getCustomTransformers: () => ({
+                                before: [
+                                    tsImportPluginFactory({
+                                        libraryName: 'antd',
+                                        libraryDirectory: 'lib',
+                                        style: 'css',
+                                    }),
+                                ],
+                            }),
+                        },
+                    },
+                ],
+            },
             {
                 test: /\.(png|gif|jpg|jpeg|xml|ico)$/,
                 exclude: [/node_modules\/proj4/, /node_modules\/antd/],
@@ -140,28 +147,6 @@ module.exports = {
                 ],
             },
             {
-                test: /\.ts(x?)$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'ts-loader',
-                        options: {
-                            silent: true,
-                            transpileOnly: DEV ? false : true,
-                            getCustomTransformers: () => ({
-                                before: [
-                                    tsImportPluginFactory({
-                                        libraryName: 'antd',
-                                        libraryDirectory: 'lib',
-                                        style: 'css',
-                                    }),
-                                ],
-                            }),
-                        },
-                    },
-                ],
-            },
-            {
                 test: /\.svg$/,
                 use: ['svg-react-loader'],
             },
@@ -171,21 +156,19 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: paths.htmlPath(),
             inject: true,
+            publicPath: process.env.PUBLIC_URL || '',
         }),
         new InterpolateHtmlPlugin({
             PUBLIC_URL: process.env.PUBLIC_URL || '',
         }),
-        new CopyWebpackPlugin([
-            {
-                from: paths.publicPath(),
-                to: '.',
-                writeToDisk: true,
-            },
-        ]),
         new Dotenv({
             path: paths.envPath(),
         }),
-        new WriteFilePlugin(),
-        // new AntdDayjsWebpackPlugin(), // 将antd中的moment替换成dayjs：https://ant.design/docs/react/replace-moment-cn#antd-dayjs-webpack-plugin
+        // new CopyWebpackPlugin({
+        //     patterns: [{ from: paths.publicPath(), to: '.' }],
+        //     options: {
+        //         concurrency: 100,
+        //     },
+        // }),
     ],
 };
