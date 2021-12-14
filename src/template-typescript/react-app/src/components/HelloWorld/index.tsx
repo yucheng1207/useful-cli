@@ -1,14 +1,14 @@
 import React from 'react';
-import styles from './index.module.scss'
+import styles from './index.module.scss';
 
-interface Props {
+interface Props { }
 
-}
+const HelloWorld: React.FunctionComponent<Props> = (props) => {
+	return (
+		<div className={styles.container}>
+			<span>hello_world</span>
+		</div>
+	);
+};
 
-const App: React.FunctionComponent<Props> = (props) => {
-	return <div className={styles.App}>
-		<span>hello_world</span>
-	</div>
-}
-
-export default App;
+export default HelloWorld;

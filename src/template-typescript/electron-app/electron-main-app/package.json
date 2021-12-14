@@ -4,6 +4,7 @@
     "description": "A Electron application written with Typescript",
     "main": "./dist/main/main.js",
     "scripts": {
+        "installDep": "yarn && cd src/renderer && yarn",
         "lint": "eslint -c .eslintrc --ext .ts ./src/main",
         "clean": "gulp clean-app",
         "dev": "node ./scripts/dev-runner.js",

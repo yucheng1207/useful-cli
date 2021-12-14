@@ -1,9 +1,10 @@
-import { DataStoreOptions } from "nedb";
+import { DataStoreOptions } from 'nedb';
 import { autoupdateConfig } from '../updater/AutoUpdater';
+import StoreNames from './StoreName';
 
-const StoreConfigs: { name: string, options?: DataStoreOptions }[] = [
+const StoreConfigs: { name: string; options?: DataStoreOptions }[] = [
 	{
-		name: "hot_update_record",
+		name: StoreNames.HOT_UPDATE_RECORD_STORE,
 		options: {
 			filename: autoupdateConfig.hotUpdateDatastorePath,
 		}

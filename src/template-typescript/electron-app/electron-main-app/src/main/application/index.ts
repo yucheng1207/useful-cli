@@ -39,13 +39,13 @@ class Application {
 		return this._app;
 	}
 
-	public init(): void {
+	public async init(): Promise<void> {
 		performance.mark(MARKS.APP_START);
 		const _app = this.getApplication()
 
 		this.configDialog();
 		this.setDeepLink();
-		this.neDBInit();
+		await this.neDBInit();
 
 		// Electron 在完成初始化，并准备创建浏览器窗口时，
 		// 会调用这个方法。
@@ -144,8 +144,8 @@ class Application {
 					// before window load， 注意这里this._mainWindow还没有赋值的
 					IPCMainManager.getInstance().init(win);
 					DialogManager.getInstance().init(win, this._app);
-					AutoUpdater.getInstance().init(win, this._app);
-					AutoUpdater.getInstance().beforeHotUpdateCheck() // 在主窗体创建前需要检查热更新的异常情况, 执行前确保IPCMainManager 和 DialogManager 已经被初始化
+					Globals.ENABLE_AUTO_UPDATE && AutoUpdater.getInstance().init(win, this._app);
+					Globals.ENABLE_AUTO_UPDATE && AutoUpdater.getInstance().beforeHotUpdateCheck() // 在主窗体创建前需要检查热更新的异常情况, 执行前确保IPCMainManager 和 DialogManager 已经被初始化
 					this.setGlobalShortcut();
 					this.setupMenu();
 
@@ -164,7 +164,7 @@ class Application {
 
 			this._mainWindow.once("show", () => {
 				// 确保应用更新弹框和热更新弹框可以正常显示
-				AutoUpdater.getInstance().checkUpdate();
+				Globals.ENABLE_AUTO_UPDATE && AutoUpdater.getInstance().checkUpdate();
 			});
 
 			this._mainWindow.on('close', async (e) => {

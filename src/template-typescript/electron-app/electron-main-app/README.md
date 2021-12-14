@@ -211,7 +211,7 @@ publish:
 
 5. 当需要热更新时先备份当前渲染进程代码，然后根据 yml 中的信息下载 dist.zip 文件，解压后将其替换成新的渲染进程代码，然后刷新页面。如果过程出现错误则恢复之前的渲染进程代码备份，具体看`src/main/updater`下的代码
 
-### 配置阿里 oss 路径
+### 配置应用更新和热更新的 ali-oss 路径
 
 代码中需要根据实际情况配置 oss 路径：
 
@@ -252,6 +252,119 @@ Logger.info('hello');
 ## 主进程和渲染进程通信
 
 -   [官方教程](https://www.electronjs.org/zh/docs/latest/api/ipc-main)
+
+### 不使用 preload（不推荐）
+
+默认情况下为了保证主进程和渲染进程隔离，创建窗口时会将`contextIsolation`设置为`true`，这会导致渲染进程无法获取到`ipcRenderer`，为了在渲染进程中能通过`const { ipcRenderer } = require('electron')`获取到`ipcRenderer`,可以将`contextIsolation`设置为`false`，但这么做是不安全，不推荐这种实现方式
+
+```js
+// main
+const mainWin = new BrowserWindow({
+	...
+	webPreferences: {
+		...
+		nodeIntegration: true,
+		contextIsolation: false
+		...
+	}
+	...
+})
+mainWin.webContents.send(channel, args) // 发送消息给渲染进程
+ipcMain.on(channel, this.handleChannelEvent.bind(this, channel)); // 接受渲染进程传来的消息
+
+
+// renderer
+const { ipcRenderer } = require('electron')
+
+ipcRenderer.send(channel, data); // 向主进程发送消息
+
+ipcRenderer.on(channel, (event: any, ...arg: any[]) => { // 监听主进程传来的消息
+	...
+})
+```
+
+### 使用 preload（推荐）
+
+上下文隔离功能将确保您的`preload.js`和 Electron 的内部逻辑 运行在所加载的 webcontent 网页 之外的另一个独立的上下文环境里。 这对安全性很重要，因为它有助于阻止网站访问 Electron 的内部组件 和 您的预加载脚本可访问的高等级权限的 API 。
+
+创建窗口时将`contextIsolation`设置为`true`即可开启上下文隔离，完成以下配置主进程和渲染进程即可正常通信
+
+1. 主进程配置`contextIsolation`为`true`并加载预加载脚本`preload.js`
+
+```js
+// main
+const mainWin = new BrowserWindow({
+	...
+	webPreferences: {
+		...
+		nodeIntegration: true,
+		contextIsolation: true,
+		preload: path.join(__dirname, `./preload/preload.js`),
+		...
+	}
+	...
+})
+
+mainWin.webContents.send(channel, args) // 发送消息给渲染进程
+
+ipcMain.on(channel, this.handleChannelEvent.bind(this, channel)); // 接受渲染进程传来的消息
+```
+
+2. 预加载脚本中使用`contextBridge`向渲染进程`window`注入通信方法
+
+```js
+/**
+ * 使用contextBridge进行通信，窗口配置 contextIsolation 为 true 时才可以使用此preload
+ * Refrence: https://www.electronjs.org/zh/docs/latest/api/context-bridge
+ */
+const { contextBridge, ipcRenderer } = require('electron');
+contextBridge.exposeInMainWorld('electron', {
+    send: (channel, data) => {
+        return ipcRenderer.send(channel, data);
+    },
+    sendSync: (channel, data) => {
+        return ipcRenderer.sendSync(channel, data);
+    },
+    sendAsync: (channel, data) => {
+        return ipcRenderer.invoke(channel, data);
+    },
+    handle: (channel, callback) => {
+        ipcRenderer.on(channel, callback);
+    },
+});
+```
+
+3. 渲染进程获取上一步注入的通信方法
+
+```js
+/**
+ * 使用以下代码来替换`const { ipcRenderer } = window.require("electron")`
+ */
+const electronApi = (window as any).electron
+const ipcRenderer = {
+	on: electronApi.handle,
+	send: electronApi.send,
+	sendSync: electronApi.sendSync,
+	sendAsync: electronApi.sendAsync,
+	invoke: electronApi.sendAsync,
+}
+
+ipcRenderer.send(channel, data); // 向主进程发送消息
+
+ipcRenderer.on(channel, (event: any, ...arg: any[]) => { // 监听主进程传来的消息
+	...
+})
+```
+
+原理很简单，就是使用 preload 做了一层转换，既不影响通信有实现了上下文隔离
+
+### 参考
+
+-   [上下文隔离](https://www.electronjs.org/zh/docs/latest/tutorial/context-isolation)
+-   [contextIsolation 选项说明](https://www.electronjs.org/zh/docs/latest/api/browser-window#new-browserwindowoptions)
+-   [preload 中使用 context-bridge](https://www.electronjs.org/zh/docs/latest/api/context-bridge)
+-   [Security, Native Capabilities, and Your Responsibility](https://www.electronjs.org/docs/latest/tutorial/security#3-enable-context-isolation-for-remote-content)
+-   [How to use preload.js properly in Electron](https://stackoverflow.com/questions/57807459/how-to-use-preload-js-properly-in-electron)
 
 ## URL 远程启动（Deep Link）
 
