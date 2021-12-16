@@ -289,6 +289,66 @@ import { Button } from 'antd';
 }
 ```
 
+## 国际化
+
+本项目使用的国际化框架为[react-intl](https://www.npmjs.com/package/react-intl)，如果使用的是 vscode 编辑器，可以下载[react-intl-linter](https://github.com/Styx11/react-intl-linter)插件便捷的添加国际化文本。
+
+1. 安装`react-intl`依赖
+
+```bash
+yarn add react-intl
+```
+
+2. React 最外层添加`IntlProvider`
+
+```js
+import { IntlProvider } from 'react-intl';
+import { getLocales, ILocales } from 'src/intl';
+
+<IntlProvider
+    locale={this.props.locale}
+    messages={getLocales(this.props.locale)}
+    onError={(err) => {
+        // react-intl itself doesn't inherently have any locale-data. Ignore Error
+        console.warn(err);
+    }}
+>
+    {this.props.children}
+</IntlProvider>;
+```
+
+3. 提供国际化配置文件
+
+```
+src
+└── intl // 语言客户端
+    ├── interface.ts // 中英文文本配置 interface
+		├── zh_CN.ts // 中文文本配置
+		├── en_US.ts // 英文文本配置
+    └── index.ts // 导出国际化配置
+```
+
+4. 使用`intl.formatMessage`添加国际化文本，配合[react-intl-linter](https://github.com/Styx11/react-intl-linter)vscode 插件可以更方便的去修改上一步的国际化配置文件
+
+```js
+import React from 'react';
+import { useIntl } from 'react-intl';
+
+interface Props { }
+
+const HelloWorld: React.FunctionComponent<Props> = (props) => {
+	const intl = useIntl()
+	return (
+		...
+		{intl.formatMessage({ id: 'HELLO_WORLD' })}
+		...
+	);
+};
+
+export default HelloWorld;
+
+```
+
 # 问题记录
 
 #### vscode 去识别`styles.xxx`时报错：cannot find module ‘xxx.module.scss’ or its corresponding type declarations
