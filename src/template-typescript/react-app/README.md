@@ -288,3 +288,36 @@ import { Button } from 'antd';
   }
 }
 ```
+
+# 问题记录
+
+#### vscode 去识别`styles.xxx`时报错：cannot find module ‘xxx.module.scss’ or its corresponding type declarations
+
+-   解决方式一：增加 xxx.module.scss 类型定义
+
+    ```typescript
+    // src/types/scss.d.ts
+    declare module '*.module.scss' {
+        const content: Record<string, string>;
+        export default content;
+    }
+    ```
+
+    这种方式只能解决 VSCode 报错，无法通过 `command+左键` 定位到相对应的 `className` 定义
+
+-   解决方式二：使用 [typescript-plugin-css-modules](https://github.com/mrmckeb/typescript-plugin-css-modules)
+    首先安装依赖
+    ```shell
+    yarn add -D typescript-plugin-css-modules
+    ```
+    然后将该插件配置在 `tsconfig.json` 文件中
+    ```json
+    {
+        "compilerOptions": {
+            "plugins": [{ "name": "typescript-plugin-css-modules" }]
+        }
+    }
+    ```
+    配置 VSCode 中的 Typescript 版本为 4.3.5 [参考](https://github.com/mrmckeb/typescript-plugin-css-modules#visual-studio-code)，如下图
+    ![image-20211215182614909](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211215182614909.png)
+    最后重启 VSCode 大功告成，这种方式既可以解决 VSCode 报错，也可以通过 `command+左键` 定位到相对应的 `className` 定义，效果很好
