@@ -330,6 +330,8 @@ src
 
 4. 使用`intl.formatMessage`添加国际化文本，配合[react-intl-linter](https://github.com/Styx11/react-intl-linter)vscode 插件可以更方便的去修改上一步的国际化配置文件
 
+> react-intl-linter 为 vscode 插件，直接搜索安装即可
+
 ```js
 import React from 'react';
 import { useIntl } from 'react-intl';
@@ -349,35 +351,220 @@ export default HelloWorld;
 
 ```
 
+## [React-Router](https://github.com/remix-run/react-router#readme)
+
+本项目使用的是 v6 版本，跟 v5 版本的写法会有所区别，详情请看[react-router 升级指南](https://reactrouter.com/docs/en/v6/upgrading/v5)
+
+-   使用 Routes 替代原来的 Switch
+-   使用 Navigate 替代原来的 Redirect: eg: `<Route path="*" element={<Navigate replace to={xxx} />} />`
+
+其他 API 或组件的使用细节请参考[官方教程](https://github.com/remix-run/react-router/blob/main/docs/getting-started/tutorial.md)
+
+## 状态管理
+
+本项目使用[redux](https://redux.js.org/)来管理项目状态，但要将`redux`集成到项目中要进行一系列繁琐的配置，使用[Redux Toolkit](https://redux-toolkit.js.org/introduction/getting-started)可以`redux`配置变的更加简单
+
+> [redux toolkit api](https://redux-toolkit.js.org/introduction/getting-started#whats-included)
+
+1. 使用`configureStore`api 创建一个`Redux Store`
+
+```js
+// src/store/index.ts
+import { BrowserHistory } from 'history';
+import { routerReducer } from 'react-router-redux';
+import {
+    configureStore as _configureStore,
+    combineReducers,
+} from '@reduxjs/toolkit';
+import application from './application/slice';
+
+/**
+ * Refrence: https://redux-toolkit.js.org/usage/usage-with-typescript
+ */
+export const rootReducer = combineReducers({
+    application,
+    routing: routerReducer,
+});
+
+function configureStore(history: BrowserHistory) {
+    return _configureStore({
+        reducer: rootReducer,
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware({
+                immutableCheck: false,
+                serializableCheck: false,
+            }),
+    });
+}
+
+const store = configureStore();
+
+export type AppState = ReturnType<typeof rootReducer>
+export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>() // Export a hook that can be reused to resolve types
+
+export default store
+```
+
+2. 将 store 注入应用
+
+```js
+// src/index.tsx
+import { Provider as ReduxProvider } from 'react-redux';
+
+/**
+ * Init App
+ */
+const render = () => {
+    ReactDOM.render(
+        <ReduxProvider store={store}>...</ReduxProvider>,
+        document.getElementById('react-app')
+    );
+};
+
+render();
+```
+
+2. 使用`createSlice`创建一个带有`action creators`和`action types`的`reducer`数据切片
+
+```js
+// src/xxx/slice.ts
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+export interface ILoading {
+    visible: boolean;
+    text?: string;
+}
+
+export interface IApplicationState {
+    loading: ILoading;
+}
+
+const initialState: IApplicationState = {
+    loading: {
+        visible: false,
+    },
+};
+
+/**
+ * 使用`createSlice`创建一个带有`action creators`和`action types`的`reducer`数据切片
+ * Redux 规定我们不可以直接在 switch cases 函数中直接修改 state 值，而是返回一个修改后的拷贝值
+ * 而 Redux ToolKit 的 createSlice 和 createReducer 函数内部使用了 immer 让我们可以直接在函数中修改 state 中的属性值。
+ * 但是需要注意的是，在同一个函数中我们不可以 既修改 state 又返回修改后的拷贝值，immer 是无法区分这两种情况的。
+ */
+const slice = createSlice({
+    name: 'application',
+    initialState,
+    reducers: {
+        SetLoadingAction(
+            state: IApplicationState,
+            action: PayloadAction<ILoading>
+        ) {
+            return {
+                ...state,
+                loading: action.payload,
+            };
+        },
+    },
+});
+
+export const { SetLoadingAction } = slice.actions;
+
+export default slice.reducer;
+```
+
+> Redux 规定我们不可以直接在 switch cases 函数中直接修改 state 值，而是返回一个修改后的拷贝值，而 Redux ToolKit 的 createSlice 和 createReducer 函数内部使用了 immer 让我们可以直接在函数中修改 state 中的属性值。但是需要注意的是，在同一个函数中我们不可以 既修改 state 又返回修改后的拷贝值，immer 是无法区分这两种情况的。
+
+```js
+// 这种写法是允许的
+const todosSlice = createSlice({
+  name: 'todos',
+  initialState: [],
+  reducers: {
+    todoAdded(state, action) {
+      // "Mutate" the existing state, no return value needed
+      state.push(action.payload)
+    },
+    todoDeleted(state, action.payload) {
+      // Construct a new result array immutably and return it
+      return state.filter(todo => todo.id !== action.payload)
+    }
+  }
+})
+
+// brokenReducer是不允许的，因为它既修改了 state 值，又返回了一个修改后的拷贝值
+const todosSlice = createSlice({
+  name: 'todos',
+  initialState: [],
+  reducers: {
+    // ❌ ERROR: mutates state, but also returns new array size!
+    brokenReducer: (state, action) => state.push(action.payload),
+    // ✅ SAFE: the `void` keyword prevents a return value
+    fixedReducer1: (state, action) => void state.push(action.payload),
+    // ✅ SAFE: curly braces make this a function body and no return
+    fixedReducer2: (state, action) => {
+      state.push(action.payload)
+    },
+  },
+})
+```
+
+3. 异步 react-thunk 配置
+
+`Redux ToolKit`提供了`createAsyncThunk`函数供用户创建能够执行异步逻辑的派发函数，但是从调研结果来看，`createAsyncThunk`函数反而使这个流程变得繁琐了，所以本项目还是使用原生的`react-thunk`的方式
+
+```js
+import { AppDispatch } from '..';
+import { SetLoadingAction } from './slice';
+
+export const actionCreators = {
+    getAsyncResult: (id: number) => async (dispatch: AppDispatch) => {
+        try {
+            dispatch(SetLoadingAction({ visible: true }));
+            const result = await getAsyncResultDetail(id);
+            dispatch(SetAsyncResult(result));
+        } catch (err) {
+            console.error(err);
+        } finally {
+            dispatch(SetLoadingAction({ visible: false }));
+        }
+    },
+};
+```
+
 # 问题记录
 
 #### vscode 去识别`styles.xxx`时报错：cannot find module ‘xxx.module.scss’ or its corresponding type declarations
 
--   解决方式一：增加 xxx.module.scss 类型定义
+1. 增加 xxx.module.scss 类型定义
 
-    ```typescript
-    // src/types/scss.d.ts
-    declare module '*.module.scss' {
-        const content: Record<string, string>;
-        export default content;
+```typescript
+// src/types/scss.d.ts
+declare module '*.module.scss' {
+    const content: Record<string, string>;
+    export default content;
+}
+```
+
+这种方式只能解决 VSCode 报错，无法通过 `command+左键` 定位到相对应的 `className` 定义
+
+2. 使用 [typescript-plugin-css-modules](https://github.com/mrmckeb/typescript-plugin-css-modules)
+   首先安装依赖
+
+```shell
+yarn add -D typescript-plugin-css-modules
+```
+
+然后将该插件配置在 `tsconfig.json` 文件中
+
+```json
+{
+    "compilerOptions": {
+        "plugins": [{ "name": "typescript-plugin-css-modules" }]
     }
-    ```
+}
+```
 
-    这种方式只能解决 VSCode 报错，无法通过 `command+左键` 定位到相对应的 `className` 定义
-
--   解决方式二：使用 [typescript-plugin-css-modules](https://github.com/mrmckeb/typescript-plugin-css-modules)
-    首先安装依赖
-    ```shell
-    yarn add -D typescript-plugin-css-modules
-    ```
-    然后将该插件配置在 `tsconfig.json` 文件中
-    ```json
-    {
-        "compilerOptions": {
-            "plugins": [{ "name": "typescript-plugin-css-modules" }]
-        }
-    }
-    ```
-    配置 VSCode 中的 Typescript 版本为 4.3.5 [参考](https://github.com/mrmckeb/typescript-plugin-css-modules#visual-studio-code)，如下图
-    ![image-20211215182614909](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211215182614909.png)
-    最后重启 VSCode 大功告成，这种方式既可以解决 VSCode 报错，也可以通过 `command+左键` 定位到相对应的 `className` 定义，效果很好
+配置 VSCode 中的 Typescript 版本为 4.3.5 [参考](https://github.com/mrmckeb/typescript-plugin-css-modules#visual-studio-code)，如下图
+![image-20211215182614909](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211215182614909.png)
+最后重启 VSCode 大功告成，这种方式既可以解决 VSCode 报错，也可以通过 `command+左键` 定位到相对应的 `className` 定义，效果很好

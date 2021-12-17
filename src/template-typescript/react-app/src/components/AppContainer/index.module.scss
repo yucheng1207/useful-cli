@@ -1,0 +1,31 @@
+@import 'src/styles/common';
+
+.container {
+    @include flexContainer(column, flex-start, flex-start);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    :global {
+        .ant-spin-spinning {
+            position: absolute;
+            display: flex;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+
+            .ant-spin-dot-item {
+                background-color: white;
+            }
+
+            .ant-spin-text {
+                margin-top: 24px;
+            }
+        }
+    }
+}

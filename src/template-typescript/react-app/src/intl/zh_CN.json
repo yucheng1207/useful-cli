@@ -1,3 +1,5 @@
 {
-    "HELLO_WORLD": "你好，世界！"
+    "HELLO_WORLD": "你好，世界！",
+    "LOADING": "加载中...",
+    "PAGE_NOT_FOUND": "您的页面走丢了..."
 }

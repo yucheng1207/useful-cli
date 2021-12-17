@@ -6,22 +6,24 @@ interface Props {
 	locale: ILocales;
 }
 
-export class IntlContainer extends React.PureComponent<Props, {}> {
-	public render() {
-		return (
-			<div style={{ width: '100%', height: '100%' }}>
-				<IntlProvider
-					locale={this.props.locale}
-					messages={getLocales(this.props.locale)}
-					onError={(err: any) => {
-						console.warn(err)
-					}}
-				>
-					{this.props.children}
-				</IntlProvider>
-			</div>
-		);
-	}
+
+const IntlContainer: React.FC<Props> = (props) => {
+
+	const messages = React.useMemo(() => {
+		return getLocales(props.locale)
+	}, [props.locale])
+
+	return <div style={{ width: '100%', height: '100%' }}>
+		<IntlProvider
+			locale={props.locale}
+			messages={messages}
+			onError={(err: any) => {
+				console.warn(err)
+			}}
+		>
+			{props.children}
+		</IntlProvider>
+	</div>
 }
 
 export default IntlContainer;
