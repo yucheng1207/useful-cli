@@ -9,7 +9,7 @@ const RouterContainer: React.FC = (props) => {
 		<Routes>
 			<Route path={URLS.HOME} element={<Home />} />
 			<Route path={URLS.ERROR} element={<Error />} />
-			<Route path="*" element={<Navigate replace to={URLS.HOME.replace('*', '')} />} />
+			<Route path="*" element={<Navigate replace to={URLS.HOME.replace('/*', '')} />} />
 		</Routes>
 	</BrowserRouter>
 }

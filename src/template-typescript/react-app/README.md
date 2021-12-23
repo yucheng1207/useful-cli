@@ -26,6 +26,38 @@ yarn dev
 yarn build
 ```
 
+# 项目目录结构
+
+```
+	├── .vscode				// vscode配置文件
+	├── build				// 项目打包输出目录
+	├── config				// 项目配置文件（webpackpack配置）
+	├── env					// 环境变量文件，dotenv-webpack会去加载该目录下的文件内容作为应用环境变量
+	├── node_modules 		// 项目依赖
+	├── node_modules 		// 项目public目录（存放了index.html）
+	├── scripts 			// 项目运行相关的脚本文件（主要是本地运行项目的启动脚本）
+	├── src					// 项目代码
+	│   ├── components			// 项目用到的组件
+	│   ├── constants			// 项目全局变量
+	│   ├── intl				// 国际化配置文件
+	│   ├── pages				// 页面组件，跟实际路由一一对应
+	│   ├── route				// 项目路由配置文件
+	│   ├── store				// 项目redux状态管理文件
+	│   ├── styles 				// 全局样式和一些公共的mixin方法，组件相关的样式文件放到组件同级目录下
+	│   ├── types				// 项目必要的类型定义文件
+	│   ├── util				// 公共方法
+	│   ├── index.tsx			// 项目入口文件
+	├── .eslintrc.js		// eslint配置文件
+	├── .gitignore
+	├── doczrc.js			// docz相关
+	├── gatsby-config.js	// docz相关
+	├── gatsby-node.js		// docz相关
+	├── package.json
+	├── README.md
+	├── tsconfig.json		// ts配置文件
+	└── yarn.lock
+```
+
 # 项目搭建
 
 ## scss 配置
@@ -362,6 +394,8 @@ export default HelloWorld;
 
 ## 状态管理
 
+### redux-toolkit
+
 本项目使用[redux](https://redux.js.org/)来管理项目状态，但要将`redux`集成到项目中要进行一系列繁琐的配置，使用[Redux Toolkit](https://redux-toolkit.js.org/introduction/getting-started)可以`redux`配置变的更加简单
 
 > [redux toolkit api](https://redux-toolkit.js.org/introduction/getting-started#whats-included)
@@ -460,10 +494,7 @@ const slice = createSlice({
             state: IApplicationState,
             action: PayloadAction<ILoading>
         ) {
-            return {
-                ...state,
-                loading: action.payload,
-            };
+            state.loading = action.payload;
         },
     },
 });
@@ -530,6 +561,20 @@ export const actionCreators = {
         }
     },
 };
+```
+
+### 性能优化
+
+获取 redux 数据时使用[proxy-memoize](https://github.com/dai-shi/proxy-memoize)可以提高性能
+
+```js
+import memoize from 'proxy-memoize';
+import { useSelector } from 'react-redux';
+
+const mySelector = memoize(
+    (state) => state.values.value1 + state.values.value2
+);
+const sum = useSelector(mySelector);
 ```
 
 # 问题记录

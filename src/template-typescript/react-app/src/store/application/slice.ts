@@ -36,10 +36,7 @@ const slice = createSlice({
 	initialState,
 	reducers: {
 		SetLoadingAction(state: IApplicationState, action: PayloadAction<ILoading>) {
-			return {
-				...state,
-				loading: action.payload
-			}
+			state.loading = action.payload
 		},
 	}
 })
