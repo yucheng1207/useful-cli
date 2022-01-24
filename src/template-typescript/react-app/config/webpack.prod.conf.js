@@ -1,7 +1,7 @@
 'use strict';
-const baseWebpackConfig = require('./webpack.base.conf');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { merge } = require('webpack-merge');
+const baseWebpackConfig = require('./webpack.base.conf');
 const paths = require('./paths');
 
 const webpackConfig = merge(baseWebpackConfig, {

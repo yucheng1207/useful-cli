@@ -7,6 +7,7 @@ import { useAppDispatch } from 'src/store';
 import { AppState } from 'src/store/index';
 import { ILoading } from 'src/store/application/slice';
 import { actionCreators } from 'src/store/application/thunk';
+import showAlertDialog from '../ModalDialog/AlertDialog';
 
 interface Props { }
 
@@ -30,10 +31,20 @@ const HelloWorld: React.FunctionComponent<Props> = (props) => {
 		}
 	}, [loading, dispatch])
 
+	const showAlert = useCallback(() => {
+		showAlertDialog({
+			title: intl.formatMessage({ id: 'TIPS' }),
+			buttonType: 'confirm',
+			text: intl.formatMessage({ id: 'HELLO_WORLD' }),
+			onOk: () => { console.log('onOk') }
+		})
+	}, [intl])
+
 	return (
 		<div className={styles.container}>
 			<span>{intl.formatMessage({ id: 'HELLO_WORLD' })}</span>
-			<Button onClick={showLoading}>Show Loading</Button>
+			<Button onClick={showLoading}>测试 Loading</Button>
+			<Button onClick={showAlert}>测试 Alert</Button>
 		</div>
 	);
 };

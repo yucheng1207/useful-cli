@@ -1,0 +1,27 @@
+@mixin desktop-and-smaller {
+	@content;
+}
+
+@mixin desktop-and-medium {
+	@media screen and (min-width: 768px) {
+		@content;
+	}
+}
+
+@mixin desktop-and-greater {
+	@media screen and (min-width: 1024px) {
+		@content;
+	}
+}
+
+@mixin desktop-and-hd {
+	@media screen and (min-width: 1440px) {
+		@content;
+	}
+}
+
+@mixin custom-media($min-width) {
+	@media screen and (min-width: $min-width) {
+		@content;
+	}
+}

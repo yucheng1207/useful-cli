@@ -1,0 +1,146 @@
+@import './colors.scss';
+@import './common.scss';
+
+@mixin ant_checkbox() {
+    :global {
+        .ant-checkbox-wrapper {
+            height: 16px;
+            @include flexContainer(row, flex-start, flex-start);
+
+            .ant-checkbox {
+                width: 12px;
+                height: 12px;
+                display: inline-block;
+
+                .ant-checkbox-input {
+                    @include flexContainer(row, center, center);
+                }
+
+                .ant-checkbox-inner {
+                    height: 100%;
+                    width: 100%;
+                    border-radius: 2px;
+                    border: solid 1px rgba(255, 255, 255, 0.2);
+                    background-color: #1f1f23;
+                }
+            }
+
+            .ant-checkbox-checked {
+                .ant-checkbox-inner {
+                    border: solid 1px rgba(255, 255, 255, 0.2);
+                    background-color: $theme;
+
+                    &::after {
+                        width: 5px;
+                        top: 4.1px;
+                        left: 1.33px;
+                    }
+                }
+            }
+
+            & > span {
+                padding-right: 0;
+                @include label(12px, rgba(255, 255, 255, 0.5), 1.33);
+                @include noSelect();
+            }
+        }
+    }
+}
+
+@mixin main_button($enable: true) {
+    background-color: #197aff;
+    border-radius: 4px;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+    @include flexContainer(row, center, center);
+    flex-shrink: 0;
+    height: 28px;
+    min-width: 66px;
+    @include label(14px, #ffffff, 1.43);
+
+    @if $enable == false {
+        opacity: 0.4;
+        cursor: default;
+        pointer-events: none;
+    } @else {
+        cursor: pointer;
+        &:hover {
+            background-color: #4795ff;
+        }
+
+        &:focus {
+            background-color: #4795ff;
+        }
+
+        &:active {
+            background-color: #1461cc;
+        }
+    }
+}
+
+@mixin secondary_button($enable: true) {
+    background-color: transparent;
+    border: solid 1px rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    box-shadow: none;
+    text-align: center;
+    @include flexContainer(row, center, center);
+    flex-shrink: 0;
+    height: 28px;
+    min-width: 66px;
+    @include label(14px, #ffffff, 1.43);
+
+    @if $enable == false {
+        opacity: 0.4;
+        cursor: default;
+        pointer-events: none;
+    } @else {
+        cursor: pointer;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &:focus {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        &:active {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    }
+}
+
+@mixin basic_button($enable: true) {
+    background-color: #ffffff;
+    border: solid 1px rgba(151, 151, 151, 0.4);
+    border-radius: 4px;
+    box-shadow: 0 0 2px 0 rgba(137, 137, 137, 0.4);
+    text-align: center;
+    @include flexContainer(row, center, center);
+    flex-shrink: 0;
+    padding: 2px 8px;
+    @include label(14px, #5e84fe);
+
+    @if $enable == false {
+        opacity: 0.4;
+        cursor: default;
+        pointer-events: none;
+    } @else {
+        cursor: pointer;
+        &:hover,
+        &.focus {
+            color: #5e84fe;
+            box-shadow: 0 0 2px 0 #898989;
+            border: solid 1px #5e84fe;
+            background-color: #ffffff;
+        }
+
+        &:active {
+            color: #ffffff;
+            box-shadow: 0 0 2px 0 rgba(137, 137, 137, 0.4);
+            border: solid 1px #ffffff;
+            background-color: #5e84fe;
+        }
+    }
+}

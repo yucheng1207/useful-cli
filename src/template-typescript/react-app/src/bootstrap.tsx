@@ -24,7 +24,7 @@ getLCP(console.log);
 const render = () => {
 	ReactDOM.render(
 		<ReduxProvider store={store}>
-			<IntlContainer locale={store.getState().application.locale}>
+			<IntlContainer>
 				<ConfigProvider
 					autoInsertSpaceInButton={false}
 					locale={store.getState().application.locale === 'zh-CN' ? zhCN : enUS}

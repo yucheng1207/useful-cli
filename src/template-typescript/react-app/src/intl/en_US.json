@@ -1,5 +1,6 @@
 {
     "HELLO_WORLD": "Hello World!",
     "LOADING": "Loading...",
-    "PAGE_NOT_FOUND": "Page Not Found"
+    "PAGE_NOT_FOUND": "Page Not Found",
+    "TIPS": "Tips"
 }
