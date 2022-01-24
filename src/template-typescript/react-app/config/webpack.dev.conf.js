@@ -10,10 +10,16 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         compress: true,
         historyApiFallback: true,
         hot: true,
+        static: {
+            directory: paths.buildPath(),
+        },
         port: paths.port,
     },
+    watchOptions: {
+        ignored: ['../build/**', '../node_modules/**'],
+    },
     plugins: [
-        ...baseWebpackConfig.plugins,
+        // ...baseWebpackConfig.plugins, // merge已经把baseWebpackConfig中的plugins加进来了，这里不需要再加了
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',

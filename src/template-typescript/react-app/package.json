@@ -61,6 +61,7 @@
         "copy-webpack-plugin": "^10.0.0",
         "css-loader": "^3.5.2",
         "dotenv-webpack": "^7.0.3",
+        "dts-loader": "^0.1.6",
         "eslint": "^7.12.1",
         "eslint-config-prettier": "^6.15.0",
         "eslint-config-react-app": "^6.0.0",
@@ -80,6 +81,7 @@
         "sass-loader": "^8.0.2",
         "style-loader": "^1.1.4",
         "svg-react-loader": "^0.4.6",
+        "tar-webpack-plugin": "^0.1.1",
         "ts-import-plugin": "^1.6.7",
         "ts-loader": "^7.0.1",
         "typescript": "^4.1.2",
@@ -89,6 +91,7 @@
         "webpack": "^5.65.0",
         "webpack-cli": "^4.9.1",
         "webpack-dev-server": "^4.6.0",
-        "webpack-merge": "^5.8.0"
+        "webpack-merge": "^5.8.0",
+        "webpack-remote-types-plugin": "^0.2.7"
     }
 }

@@ -563,7 +563,7 @@ export const actionCreators = {
 };
 ```
 
-### 性能优化
+### 性能优化(proxy-memoize)
 
 获取 redux 数据时使用[proxy-memoize](https://github.com/dai-shi/proxy-memoize)可以提高性能
 
@@ -577,7 +577,300 @@ const mySelector = memoize(
 const sum = useSelector(mySelector);
 ```
 
+## 集成`Module Federation`
+
+### 什么是`Module Federation`
+
+一个应用可以由多个独立的构建组成。这些独立的构建之间没有依赖关系，他们可以独立开发、部署。使用`module federation`，我们可以在一个 javascript 应用中动态加载并运行另一个 javascript 应用的代码，并实现应用之间的依赖共享。具体介绍可以查看[官方文档](https://webpack.js.org/concepts/module-federation/#concept-goals)
+
+### Typescript 支持
+
+Module Federation 官方默认不支持 Typescript，本工程参考 [Module Federation 调研](https://github.com/cjh804263197/test-module-federation/wiki/Module-Federation-%E8%B0%83%E7%A0%94) 这篇文章进行配置，支持了 ts。
+
+### 配置
+
+**1. 修改 index.tsx，使用 import("xxx")来引用”bootstrap.tsx“**
+
+当引用内引用了 remote 模块，要确保所有 dependencies 在 bootstrap.tsx 之前被加载。例外，如果 TS 报错的话需要在 tsconfig.json 中加上 `"module": "es2020"`，否则会报错”Shared module is not available for eager consumption: webpack/sharing/consume/default/react/react“（细节可以看下面的问题记录）
+
+```jsx
+// bootstrap.tsx
+
+import ReactDOM from 'react-dom';
+import Home from './pages/Home/index';
+import 'src/styles/app.scss';
+
+const render = () => {
+    ReactDOM.render(<Home />, document.getElementById('react-app'));
+};
+
+render();
+```
+
+将 index.tsx 的内容改为
+
+```jsx
+// index.tsx
+
+import('./bootstrap');
+```
+
+**2. 配置 webpack**
+
+#### 作为主应用输出模块配置如下
+
+a. 使用`webpack.container.ModuleFederationPlugin`输出应用模块
+b. 使用`dts-loader`输出类型定义文件
+c. 使用`tar-webpack-plugin`将输出的类型定义文件打包和压缩
+
+```js
+// webpack config
+const {
+	container: { ModuleFederationPlugin },
+} = require("webpack")
+const TarWebpackPlugin = require('tar-webpack-plugin').default;
+
+const mfExportCfg = {
+	libName: 'useful_module', // The name configured in ModuleFederationPlugin
+	exposes: { // The exposes configured in ModuleFederationPlugin
+		'./UsefulButton': '../src/components/MoudleFederation/LocalExportButton/index.tsx',
+	},
+	typesOutputDir: paths.buildPath(), // Optional, default is '.wp_federation'
+	exportFileName: 'remoteEntry.js',
+}
+...
+module.exports = {
+	...
+	module: {
+		rules: [
+			...
+			{
+				test: /\.ts(x?)$/,
+				exclude: /node_modules/,
+				use: [
+					{
+						loader: 'ts-loader',
+						options: {
+							...
+						},
+					},
+					{
+						loader: 'dts-loader',
+						options: {
+							name: mfExportCfg.libName,
+							exposes: mfExportCfg.exposes,
+							typesOutputDir: mfExportCfg.typesOutputDir,
+						},
+					},
+				],
+			},
+			...
+		],
+	},
+	plugins: [
+		...
+		new ModuleFederationPlugin({
+			name: mfExportCfg.libName,
+			filename: mfExportCfg.exportFileName,
+			library: {
+				type: 'var',
+				name: mfExportCfg.libName,
+			},
+			exposes: mfExportCfg.exposes,
+			shared: {
+				react: {
+					singleton: true,
+					requiredVersion: false,
+					version: false,
+				},
+			},
+		}),
+		new TarWebpackPlugin({
+			action: 'c',
+			gzip: true,
+			cwd: paths.buildPath(),
+			file: path.resolve(paths.buildPath(), `${mfExportCfg.libName}-ts.tgz`),
+			fileList: [mfExportCfg.libName],
+			delSource: !DEV, // development 环境下不删除压缩源文件，因为在 hot-update 时，如果仅仅是 css 文件的更改，则不会触发 dts-loader 的编译，从而不会产生新的类型定义文件夹，而该 TarWebpackPlugin 又会执行，当找不到压缩文件夹时会报错 [Error: ENOENT: no such file or directory]
+		}),
+		...
+	]
+	...
+}
+```
+
+**注：这一步需要注意的是 ts-loader 千万不要去掉，并且要放在 dts-loader 前面**
+
+#### 作为子应用引用其他模块配置如下
+
+a. 使用`webpack.container.ModuleFederationPlugin`引入远程模块
+b. 使用`webpack-remote-types-plugin`下载远程模块类型文件
+
+```js
+// webpack config
+const {
+	container: { ModuleFederationPlugin },
+} = require("webpack")
+const WebpackRemoteTypesPlugin = require('webpack-remote-types-plugin').default;
+
+function getRemoteEntryUrl(port) {
+    return `//localhost:${port}/remoteEntry.js`
+}
+
+const mfImportCfg = {
+    remotes: {
+        app2: `app2@${getRemoteEntryUrl(3002)}`, // 注意这里的app2是输出时的libName
+    },
+    typeRemotes: {
+        app2: `app2@http:${getRemoteEntryUrl(3002)}`, // 注意这里多了字符串”http“
+    },
+    outputDir: 'src/types',
+    remoteFileName: '[name]-ts.tgz', // default filename is [name]-dts.tgz where [name] is the remote name, for example, `app` with the above setup
+}
+...
+module.exports = {
+	...
+	plugins: [
+		...
+		new ModuleFederationPlugin({
+			remotes: mfImportCfg.remotes,
+			shared: {
+				react: {
+					singleton: true,
+					requiredVersion: false,
+					version: false,
+				},
+			}
+		}),
+		new WebpackRemoteTypesPlugin({
+			remotes: mfImportCfg.remotes,
+			outputDir: mfImportCfg.outputDir,
+			remoteFileName: mfImportCfg.remoteFileName,
+		}),
+		...
+	]
+	...
+}
+```
+
+c. 在 React 引用远程模块，由于该模块是异步加载的，所以需要使用`React.Suspense`包住
+
+```jsx
+import React, { useEffect } from 'react';
+// import { Button as RemoteButton, ButtonProps } from "app2/Button";
+// or
+// const RemoteButton = React.lazy(() => import("app2/Button"));
+// or
+const RemoteButton = React.lazy(() =>
+    import('app2/Button').then(({ Button }) => ({ default: Button }))
+);
+
+interface Props {}
+
+/**
+ * 该组件用于测试 Moudle Federation， 本工程作为子应用引入remote组件
+ * @param props
+ * @returns
+ */
+const RemoteImportButton: React.FunctionComponent<Props> = (props) => {
+    useEffect(() => {
+        console.log('MFTestComponent Loaded!');
+    }, []);
+    return (
+        <React.Suspense fallback="Loading Button">
+            <RemoteButton />
+        </React.Suspense>
+    );
+};
+
+export default RemoteImportButton;
+```
+
+d. 为了让 ts 能够正确的识别远程类型文件，tsconfig 配置添加下"path"
+
+```json
+// tsconfig.json
+	...
+	"module": "es2020",
+	...
+	"paths": {
+		"*": ["*", "./src/types/*"]
+	}
+	...
+```
+
+#### 其他应用引用本应用模块配置如下
+
+```jsx
+// 配置webpack config
+const {
+	container: { ModuleFederationPlugin },
+} = require("webpack")
+const WebpackRemoteTypesPlugin = require('webpack-remote-types-plugin').default;
+
+function getRemoteEntryUrl(port) {
+    return `//localhost:${port}/remoteEntry.js`
+}
+
+const mfImportCfg = {
+    remotes: {
+        app2: `app2@${getRemoteEntryUrl(3002)}`,
+		useful: `useful@${getRemoteEntryUrl(3000)}`,
+    },
+    typeRemotes: {
+        app2: `app2@http:${getRemoteEntryUrl(3002)}`,
+		useful: `useful@http:${getRemoteEntryUrl(3000)}`,
+    },
+    outputDir: 'src/types',
+    remoteFileName: '[name]-ts.tgz', // default filename is [name]-dts.tgz where [name] is the remote name, for example, `app` with the above setup
+}
+...
+module.exports = {
+	...
+	plugins: [
+		...
+		new ModuleFederationPlugin({
+			remotes: mfImportCfg.remotes,
+			shared: {
+				react: {
+					singleton: true,
+					requiredVersion: false,
+					version: false,
+				},
+			}
+		}),
+		new WebpackRemoteTypesPlugin({
+			remotes: mfImportCfg.remotes,
+			outputDir: mfImportCfg.outputDir,
+			remoteFileName: mfImportCfg.remoteFileName,
+		}),
+		...
+	]
+	...
+}
+
+// 引用组件
+import React, { useEffect } from 'react';
+const RemoteButton = React.lazy(() => import('app2/Button'));
+const RemoteButton2 = React.lazy(() => import('useful/UsefulButton'));
+
+const App = () => (
+    <div>
+        <h1>Basic Host-Remote</h1>
+        <h2>App 1</h2>
+        <React.Suspense fallback="Loading Button">
+            <RemoteButton />
+            <RemoteButton2 />
+        </React.Suspense>
+    </div>
+);
+
+export default App;
+```
+
 # 问题记录
+
+### style 相关
 
 #### vscode 去识别`styles.xxx`时报错：cannot find module ‘xxx.module.scss’ or its corresponding type declarations
 
@@ -613,3 +906,179 @@ yarn add -D typescript-plugin-css-modules
 配置 VSCode 中的 Typescript 版本为 4.3.5 [参考](https://github.com/mrmckeb/typescript-plugin-css-modules#visual-studio-code)，如下图
 ![image-20211215182614909](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211215182614909.png)
 最后重启 VSCode 大功告成，这种方式既可以解决 VSCode 报错，也可以通过 `command+左键` 定位到相对应的 `className` 定义，效果很好
+
+### Module Federation 相关
+
+#### Shared module is not available for eager consumption: webpack/sharing/consume/default/react/react
+
+根据错误提示大概意思是，「共享模块不可用于急切消费」。解决方法[参考](https://www.linkedin.com/pulse/uncaught-error-shared-module-available-eager-rany-elhousieny-phd%E1%B4%AC%E1%B4%AE%E1%B4%B0?trk=articles_directory)，新建一个 bootstrap.tsx ，将原有应用入口文件 index.tsx 中的内镕放到 bootstrap.tsx 中
+
+```react
+// bootstrap.tsx
+
+import ReactDOM from 'react-dom';
+import Home from './pages/Home/index';
+import 'src/styles/app.scss';
+
+const render = () => {
+	ReactDOM.render(
+		<Home />,
+		document.getElementById('react-app')
+	);
+};
+
+render();
+```
+
+将 index.tsx 的内容改为
+
+```react
+// index.tsx
+
+import("./bootstrap")
+```
+
+这么做的原因就是，当应用内引用了 remote 模块，要确保所有 dependencies 在 bootstrap.tsx 之前被加载。例外，如果 TS 报错的话需要在 tsconfig.json 中加上 `"module": "es2020"`
+
+#### Loading script failed.(missing: http://localhost:3000/remoteEntry.js)
+
+在 development 环境下，当前应用 app3（http://localhost:3000）expose module 被另一个应用 app1 加载时会报上面的错误，经过排查，将 webpack.base.conf.js 中的 optimization 配置去掉，就可以解决该问题。
+optimization 去掉前打包输出如下：
+![image-20211222144359056](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211222144359056.png)
+optimization 去掉后打包输出如下：
+![image-20211222144601403](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211222144601403.png)
+对比一下可以发现，配置 optimization 输出多了两个 `Entrypoint`
+optimization 去掉前输出的 remoteEntry.js 如下：
+
+```js
+/******/ // module cache are used so entry inlining is disabled
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ var __webpack_exports__ = __webpack_require__.O(
+    undefined,
+    [
+        'vendors-node_modules_webpack-dev-server_client_index_js_protocol_ws_3A_hostname_0_0_0_0_port_-5b2c06',
+        'default-webpack_sharing_provide_default_react',
+    ],
+    function () {
+        return __webpack_require__('webpack/container/entry/app3');
+    }
+);
+/******/ __webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ app3 = __webpack_exports__;
+```
+
+在加载 `webpack/container/entry/app3` 之前要先加载其他的依赖文件，如果这些依赖文件加载失败了，则会影响到 `webpack/container/entry/app3` 的加载。
+optimization 去掉后输出的 remoteEntry.js 如下：
+
+```js
+/******/ // module cache are used so entry inlining is disabled
+/******/ // startup
+/******/ // Load entry module and return exports
+/******/ __webpack_require__(
+    '../node_modules/webpack-dev-server/client/index.js?protocol=ws%3A&hostname=0.0.0.0&port=3000&pathname=%2Fws&logging=info&reconnect=10'
+);
+/******/ var __webpack_exports__ = __webpack_require__(
+    'webpack/container/entry/app3'
+);
+/******/ app3 = __webpack_exports__;
+```
+
+加载 `webpack/container/entry/app3` 与加载其他依赖是并行的，加载失败也不受影响
+消费端的加载源码如下：
+
+```js
+/***/ "webpack/container/reference/app3":
+/*!*******************************************************!*\
+  !*** external "app3@//localhost:3000/remoteEntry.js" ***!
+  \*******************************************************/
+((module, __unused_webpack_exports, __webpack_require__) => {
+"use strict";
+var __webpack_error__ = new Error();
+module.exports = new Promise((resolve, reject) => {
+	if(typeof app3 !== "undefined") return resolve();
+	__webpack_require__.l("//localhost:3000/remoteEntry.js", (event) => {
+		if(typeof app3 !== "undefined") return resolve();
+		var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+		var realSrc = event && event.target && event.target.src;
+		__webpack_error__.message = 'Loading script failed.\n(' + errorType + ': ' + realSrc + ')';
+		__webpack_error__.name = 'ScriptExternalLoadError';
+		__webpack_error__.type = errorType;
+		__webpack_error__.request = realSrc;
+		reject(__webpack_error__);
+	}, "app3");
+}).then(() => (app3));
+})
+```
+
+#### Invalid hook call.
+
+详细的报错如下：
+
+```
+Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+```
+
+参考这个[issues](https://github.com/styled-components/styled-components/issues/3302#issuecomment-707427977)，大致可以得知造成该问题的原因是在两个 React 版本导致的，因此将 app3 的配置增加 `singleton: true` 代表 react 只能有一个版本：
+
+```js
+new ModuleFederationPlugin({
+	...
+	shared: {
+		react: {
+			singleton: true,
+			requiredVersion: false,
+			version: false,
+		},
+	},
+}),
+```
+
+同样消费者端 app1 的配置也需增加
+
+```js
+new ModuleFederationPlugin({
+	...
+	shared: ['react']
+}),
+```
+
+### webpack 相关
+
+#### 部分 webpack plugin 被执行两次
+
+在打包过程中，发现部分 plugin 会被执行两次，如下图所示：
+![image-20211224165300777](https://cdn.jsdelivr.net/gh/cjh804263197/AssetsLibrary@master/img/image-20211224165300777.png)
+原因是在使用 webpack-merge 的时候，其对于 plugin 的合并逻辑理解有误，造成相同的 plugin 被加载两次，从而引发了部分 plugin 重复执行的情况，错误情况如下：
+
+```javascript
+const baseWebpackConfig = require("./webpack.base.conf")
+const { merge } = require("webpack-merge")
+
+export default merge(baseWebpackConfig, {
+	...,
+	plugin: [
+		...baseWebpackConfig.plugin,
+		// ...省略其他plugin
+	]
+})
+```
+
+正确的写法是
+
+```javascript
+const baseWebpackConfig = require("./webpack.base.conf")
+const { merge } = require("webpack-merge")
+
+export default merge(baseWebpackConfig, {
+	...,
+	plugin: [
+		// ...省略其他plugin
+	]
+})
+```
+
+webpack-merge 会将 plugin 数组进行合并，并不是进行重置，因此不需要我们手动做数组重构
