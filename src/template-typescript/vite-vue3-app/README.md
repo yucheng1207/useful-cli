@@ -1,14 +1,37 @@
-参考：[从 0 开始手把手带你搭建一套规范的 Vue3.x 项目工程环境](https://juejin.cn/post/6951649464637636622)
+# 介绍
 
-# 创建项目
+该项目是使用 [Vite](https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project) 搭建的 Vue3.0 项目模板，支持以下功能：
 
-使用 **Vite** 创建项目：[https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project](https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project)
+- 支持 scss
+- 集成 Vue Router
+- 集成 Vuex
+- 集成 UI 框架 Element Plus
+- 使用 EditorConfig + Prettier + ESLint 来实现代码规范化
+
+# 开始
+
+可以使用[useful-cli](https://github.com/yucheng1207/useful-cli)创建项目模板。
+
+```
+// 本地运行
+yarn dev
+
+// 编译
+yarn build
+```
+
+# 框架搭建笔记
+
+## 资料
+
+- [Vite 官方中文文档](https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project)
+- [从 0 开始手把手带你搭建一套规范的 Vue3.x 项目工程环境](https://juejin.cn/post/6951649464637636622)
+
+## 使用 [Vite](https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project) 创建项目
 
 ```
 npm init vite@latest vite-vue3-app -- --template vue-ts
 ```
-
-# 框架搭建
 
 ## 配置 Vite
 
@@ -41,30 +64,26 @@ npm i vue-router@4
 
 ```javascript
 // src/router/index.ts
-import {
-    createRouter,
-    createWebHashHistory,
-    RouteRecordRaw
-} from 'vue-router'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import Home from '@/views/home.vue'
 import Test from '@/views/Test.vue'
 
 const routes: Array<RouteRecordRaw> = [
-    {
-        path: '/',
-        name: 'Home',
-        component: Home
-    },
-    {
-        path: '/test',
-        name: 'Test',
-        component: Test
-    },
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: Test
+  }
 ]
 
 const router = createRouter({
-    history: createWebHashHistory(),
-    routes
+  history: createWebHashHistory(),
+  routes
 })
 
 export default router
@@ -108,39 +127,41 @@ import { InjectionKey } from 'vue'
 import { createStore, Store, useStore as baseUseStore } from 'vuex'
 
 const defaultState = {
-    count: 0
+  count: 0
 }
 
 interface RootStateTypes {
-    count: number
+  count: number;
 }
 
 export const key: InjectionKey<Store<RootStateTypes>> = Symbol('vue-store')
 export function useStore<T = RootStateTypes>() {
-    return baseUseStore<T>(key)
+  return baseUseStore < T > key
 }
 
 // Create a new store instance.
-export default createStore<RootStateTypes>({
-  state() {
-    return defaultState
-  },
-  mutations: {
-    increment(state: typeof defaultState) {
-      state.count++
-    }
-  },
-  actions: {
-    increment(context) {
-      context.commit('increment')
-    }
-  },
-  getters: {
-    double(state: typeof defaultState) {
-      return 2 * state.count
+export default createStore <
+  RootStateTypes >
+  {
+    state() {
+      return defaultState
+    },
+    mutations: {
+      increment(state: typeof defaultState) {
+        state.count++
+      }
+    },
+    actions: {
+      increment(context) {
+        context.commit('increment')
+      }
+    },
+    getters: {
+      double(state: typeof defaultState) {
+        return 2 * state.count
+      }
     }
   }
-})
 ```
 
 1. 在 main.ts 文件中挂载 Vuex 配置
@@ -186,10 +207,10 @@ export default defineComponent({
       // 在 computed 函数中访问 state
       count: computed(() => store.state.count),
       // 在 computed 函数中访问 getter
-      doubleCount: computed(() => store.getters.double),
+      doubleCount: computed(() => store.getters.double)
     })
 
-     // 使用 mutation
+    // 使用 mutation
     const increment = () => {
       store.commit('increment')
     }
@@ -209,21 +230,17 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  button {
-    margin: 0 8px;
-  }
-</style>import { createApp } from 'vue'
-import App from './App.vue'
-
-import router from '@/router/index'
-import store, { key } from '@/store/index'
-
-createApp(App).use(router).use(store, key).mount('#app')
+button {
+  margin: 0 8px;
+}
+</style>
+import { createApp } from 'vue' import App from './App.vue' import router from '@/router/index'
+import store, { key } from '@/store/index' createApp(App).use(router).use(store, key).mount('#app')
 ```
 
-为了让vuex更好的支持类型检查，参考以下文章进一步优化vuex的配置
-[typescript官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
-[赋予Vuex 4.x 更好的 TypeScript体验](https://juejin.cn/post/6999886459343732772#heading-8)
+为了让 vuex 更好的支持类型检查，参考以下文章进一步优化 vuex 的配置
+[typescript 官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
+[赋予 Vuex 4.x 更好的 TypeScript 体验](https://juejin.cn/post/6999886459343732772#heading-8)
 
 ## 集成 UI 框架 Element Plus
 
@@ -302,7 +319,7 @@ styleImport(app).use(router).use(store, key).mount('#app')
 
 # 代码规范
 
-**使用** **EditorConfig + Prettier + ESLint 组合来实现代码规范化,** 为了防止报错 请将 Node 升级到最新稳定版 `nvm install stable`
+**使用** **EditorConfig + Prettier + ESLint 组合来实现代码规范化**，为了防止报错 请将 Node 升级到最新稳定版 `nvm install stable`
 
 ## EditorConfig
 
@@ -389,24 +406,17 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
+    node: true
   },
-  extends: [
-    'plugin:vue/essential',
-    'airbnb-base',
-  ],
+  extends: ['plugin:vue/essential', 'airbnb-base'],
   parserOptions: {
     ecmaVersion: 12,
     parser: '@typescript-eslint/parser',
-    sourceType: 'module',
+    sourceType: 'module'
   },
-  plugins: [
-    'vue',
-    '@typescript-eslint',
-  ],
-  rules: {
-  },
-};
+  plugins: ['vue', '@typescript-eslint'],
+  rules: {}
+}
 ```
 
 1. 配置 vscode 的 settings.json 文件

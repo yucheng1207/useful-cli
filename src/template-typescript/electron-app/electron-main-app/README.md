@@ -1,6 +1,21 @@
-# 创建项目
+# 介绍
 
-该工程在 [https://github.com/electron/electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) 模板上进行搭建的
+这是一个 electron 前端项目模板，基于 [electron-quick-start-typescript](https://github.com/electron/electron-quick-start-typescript) 模板搭建的，渲染进程是一个最简单的静态页面，用于演示如何引入一个渲染进程项目，可以参考该静态页面的配置自行改成`vue`或`react`，主要集成了以下功能：
+
+-   支持使用 `webpack` 编译主进程和渲染进程代码，使用 `gulp` 编写应用调试打包脚本
+-   使用 `electron-builder` 打包应用，支持 window、mac 两个系统
+-   支持 应用更新 和 热更新。应用更新即主进程代码改动时重新安装应用，热更新即渲染进程代码改动时在线更新渲染进程代码（不重新安装）
+-   支持 typescript
+-   主进程使用 [bunyan](https://www.npmjs.com/package/bunyan) 进行日志收集
+-   主进程使用 [Nedb](https://github.com/louischatriot/nedb) 管理本地数据
+-   支持主进程和渲染进程通信
+-   支持 URL 远程启动（Deep Link）
+-   主窗口加载完成前使用 Loading 窗口白屏和过长时间的启动等待
+-   使用 ESLint 和 .vscode 来规范代码
+
+# 开始
+
+可以使用[useful-cli](https://github.com/yucheng1207/useful-cli)创建项目模板。
 
 ```bash
 
@@ -20,22 +35,22 @@ yarn only:publish:app:[env]
 yarn publish:renderer:[env]
 ```
 
-# 项目搭建
+# 项目搭建笔记
 
-## 资料
+## 参考资料
 
 -   [electron 官网](https://www.electronjs.org/zh/docs/latest/tutorial/quick-start)
 -   [electron-builder](https://github.com/electron-userland/electron-builder)
 -   [electron 环境变量](https://www.electronjs.org/docs/latest/api/environment-variables)
 -   [boilerplates](https://www.electron.build/#boilerplates)
 
-## node 版本
-
-开发此模板时使用的是 v14.18.1 或 v16.11.1，如果遇到 node 版本问题，建议切换到这两个版本
+> **node 版本**: 开发此模板时使用的是 v14.18.1 或 v16.11.1，如果遇到 node 版本问题，建议切换到这两个版本
 
 ## 本地调试
 
-执行`yarn dev`会自动本地运行主进程和渲染进程代码，详情看`scripts/dev-runner.js`，运行步骤为
+### 应用启动
+
+执行`yarn dev`会自动本地运行主进程和渲染进程代码，详情看`scripts/dev-runner.js`，运行步骤为：
 
 1. startRenderer：启动渲染进程
    可以看到`startRenderer`中的逻辑很简单，只是执行了一下渲染进程启动脚本`electron-dev-run`，该脚本的目的就是让渲染进程在本地运行起来。
@@ -49,13 +64,13 @@ yarn publish:renderer:[env]
 
 ### 热重载
 
-参考了[electron-vue](https://github.com/SimulatedGREG/electron-vue/blob/master/template/.electron-vue/dev-runner.js)的 dev-runner 实现热重载功能
+参考了 [electron-vue](https://github.com/SimulatedGREG/electron-vue/blob/master/template/.electron-vue/dev-runner.js) 的 dev-runner 实现热重载功能
 
-#### 主进程热重载
+**主进程热重载**
 
 主进程文件修改时重启 electron，详情请看`scripts/dev-runner.js`
 
-#### 渲染进程热重载
+**渲染进程热重载**
 
 渲染进程本地运行时使用`webpack-dev-server`起一个 server，修改渲染进程文件会触发网页重新加载， 详情看渲染进程的`electron-dev-runner.js`渲染进程启动文件
 
@@ -95,7 +110,7 @@ execSync(`cd ${paths.rendererSrc} && yarn build:${env}`);
 
 使用`webpack`对主进程代码进行编译，跟直接使用`tsc`进行编译相比有以下好处：
 
-** webpack vs tsc **
+**webpack vs tsc**
 
 -   tsc: 使用 tsc 编译无法配置 alias，也无法将 node_module 中的内容一起编译，所以 electron 打包的时候还需要将 node_module 拷贝到输出包中，导致输出包十分的大
 -   webpack: 使用 webpack 打包不仅可以配置 alias，还可以将所用内容(包括 node_module)输出到一个 bundle 中，体积更小，并且可以使用 webpack 的插件，如`dotenv-webpack`可以很好的解决环境变量的问题

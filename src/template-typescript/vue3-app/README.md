@@ -1,7 +1,61 @@
-# 创建项目
-该项目使用vue-cli创建，创建过程如下
+# 介绍
 
-## 安装vue-cli
+该项目是使用 `vue-cli` 搭建的 Vue3.0 项目模板，支持以下功能，更多自定义功能待完善...
+
+-   支持 scss
+-   集成 Vue Router
+-   集成 Vuex
+-   集成 UI 框架 Element Plus
+-   使用 Prettier + ESLint 来实现代码规范化
+
+# 开始
+
+可以使用[useful-cli](https://github.com/yucheng1207/useful-cli)创建项目模板。
+
+**安装依赖**
+
+```
+yarn install
+```
+
+**本地运行（热重载）**
+
+```
+yarn serve
+```
+
+**打包（编译生产环境的包）**
+
+```
+yarn build
+```
+
+**运行单元测试**
+
+```
+yarn test:unit
+```
+
+**运行 e2e 测试**
+
+```
+yarn test:e2e
+```
+
+**Lints 和 修复文件**
+
+```
+yarn lint
+```
+
+# 项目搭建笔记
+
+## 使用 vue-cli 创建项目
+
+该项目使用 vue-cli 创建，创建过程如下
+
+**安装 vue-cli**
+
 ```
 // 安装
 npm install -g @vue/cli
@@ -18,11 +72,14 @@ yarn global add @vue/cli
 vue --version
 ```
 
-## 使用命令创建项目
+**使用命令创建项目**
+
 ```
 vue create app-name
 ```
+
 选择`Manually select features`
+
 ```
 ? Check the features needed for your project: (Press <space> to select, <a> to toggle all, <i> to invert select
 ion)
@@ -37,6 +94,7 @@ ion)
  ◉ Unit Testing
  ◉ E2E Testing
 ```
+
 ```
 ? Please pick a preset: Manually select features
 ? Check the features needed for your project: Choose Vue version, Babel, TS, Router, Vuex, CSS Pre-processors,
@@ -54,50 +112,19 @@ de-sass)
 ? Where do you prefer placing config for Babel, ESLint, etc.? In dedicated config files
 ```
 
-# 开发
-## 安装依赖
-```
-yarn install
-```
-
-## 本地运行（热重载）
-```
-yarn serve
-```
-
-## 打包（编译生产环境的包）
-```
-yarn build
-```
-
-## 运行单元测试
-```
-yarn test:unit
-```
-
-## 运行 e2e 测试
-```
-yarn test:e2e
-```
-
-## Lints 和 修复文件
-```
-yarn lint
-```
-
 ## 自定义配置
-[Configuration Reference](https://cli.vuejs.org/config/).
 
-# 工程化配置
+[Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Vuex
 
-[typescript官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
-[赋予Vuex 4.x 更好的 TypeScript体验](https://juejin.cn/post/6999886459343732772#heading-8)
+[typescript 官方配置教程](https://next.vuex.vuejs.org/zh/guide/typescript-support.html#typescript-%E6%94%AF%E6%8C%81)
+[赋予 Vuex 4.x 更好的 TypeScript 体验](https://juejin.cn/post/6999886459343732772#heading-8)
 
 ## Element-Plus
 
 ### 方式一：全部引入
+
 ```
 import { ElButton } from 'element-plus/lib/components';
 
@@ -108,6 +135,7 @@ app.use(ElButton)
 ```
 
 ### 方式二：手动引入样式
+
 ```
 import { ElButton } from 'element-plus/lib/components';
 
@@ -119,12 +147,17 @@ app.use(ElButton)
 ```
 
 ### 方式三：按需引入
+
 [官方教程](https://element-plus.gitee.io/zh-CN/guide/quickstart.html#on-demand-import)
+
 1. 安装`unplugin-vue-components`依赖
+
 ```
 yarn add -D unplugin-vue-components
 ```
-2. 配置webpack
+
+2. 配置 webpack
+
 ```
 // vue.config.js
 
@@ -142,4 +175,4 @@ module.exports = {
 };
 ```
 
-这里我们使用方式三`按需加载`方式引入element-plus
+这里我们使用方式三`按需加载`方式引入 element-plus

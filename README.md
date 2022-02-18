@@ -2,11 +2,46 @@
 
 一个有用的前端脚手架，支持创建 `微信小程序`、`vue`、`react` 和 `electron` 项目，脚手架搭建过程可以看这篇[掘金 blog](https://juejin.cn/post/6981631766406627364)。
 
--   [微信小程序](./src/template-typescript/wechat-miniprogram)
--   [react-ts](./src/template-typescript/react-app)
--   [vue3-ts(vite)](./src/template-typescript/vite-vue3-app)
--   [vue3-ts(vue-cli)](./src/template-typescript/vue3-app)
--   [electron-main-app](./src/template-typescript/electron-app/electron-main-app)
+-   [微信小程序](./src/template-typescript/wechat-miniprogram)：使用 `gulp`搭建的小程序原生开发工程化模板，集成了以下功能：
+    -   支持`国际化`
+    -   支持`typescript`
+    -   支持`scss 预编译`
+    -   支持`设置环境变量`
+    -   支持`热更新`（执行 yarn dev 在文件被修改时会自动编译）
+    -   使用 Promise 封装了 wx.request，并创建了一个 httpManager 单例
+    -   使用 eslint + prettier + husky 规范代码格式
+    -   引入了 weUI 库
+-   [react-ts](./src/template-typescript/react-app)：这是一个 react 前端项目模板，使用了 React 全家桶 （react + react-router + redux）搭建，项目中推荐使用 react-hook 开发组件，主要集成了以下功能：
+    -   自定义配置 webpack，支持 alias、scss 等
+    -   集成了 antd UI 库
+    -   支持 国际化
+    -   支持使用 redux-toolkit 来进行状态管理
+    -   支持使用 react-router 来管理路由
+    -   集成了 Module Federation，可以输出和引入子模块
+    -   使用 ESLint、husky 和 .vscode 来规范代码
+-   [vue3-ts(vite)](./src/template-typescript/vite-vue3-app)：该项目是使用 [Vite](https://cn.vitejs.dev/guide/#scaffolding-your-first-vite-project) 搭建的 Vue3.0 项目模板，支持以下功能，更多自定义功能待完善...
+    -   支持 scss
+    -   集成 Vue Router
+    -   集成 Vuex
+    -   集成 UI 框架 Element Plus
+    -   使用 EditorConfig + Prettier + ESLint 来实现代码规范化
+-   [vue3-ts(vue-cli)](./src/template-typescript/vue3-app)：该项目是使用 `vue-cli` 搭建的 Vue3.0 项目模板，支持以下功能，更多自定义功能待完善...
+    -   支持 scss
+    -   集成 Vue Router
+    -   集成 Vuex
+    -   集成 UI 框架 Element Plus
+    -   使用 Prettier + ESLint 来实现代码规范化
+-   [electron-main-app](./src/template-typescript/electron-app/electron-main-app)：这是一个 electron 前端项目模板，渲染进程是一个最简单的静态页面，用于演示如何引入一个渲染进程项目，可以参考该静态页面的配置自行改成`vue`或`react`，主要集成了以下功能：
+    -   支持使用 `webpack` 编译主进程和渲染进程代码，使用 `gulp` 编写应用调试打包脚本
+    -   使用 `electron-builder` 打包应用，支持 window、mac 两个系统
+    -   支持 应用更新 和 热更新。应用更新即主进程代码改动时重新安装应用，热更新即渲染进程代码改动时在线更新渲染进程代码（不重新安装）
+    -   支持 typescript
+    -   主进程使用 [bunyan](https://www.npmjs.com/package/bunyan) 进行日志收集
+    -   主进程使用 [Nedb](https://github.com/louischatriot/nedb) 管理本地数据
+    -   支持主进程和渲染进程通信
+    -   支持 URL 远程启动（Deep Link）
+    -   主窗口加载完成前使用 Loading 窗口白屏和过长时间的启动等待
+    -   使用 ESLint 和 .vscode 来规范代码
 
 ## 查看当前版本
 

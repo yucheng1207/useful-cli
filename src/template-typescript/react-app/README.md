@@ -1,16 +1,22 @@
-# 创建项目
+# 介绍
 
-## useful-cli
+这是一个 react 前端项目模板，使用了 React 全家桶 （react + react-router + redux）搭建，项目中推荐使用 react-hook 开发组件，主要集成了以下功能：
 
-可以使用[useful-cli](https://github.com/yucheng1207/useful-cli)创建该 react-template 项目。
+-   自定义配置 webpack，支持 alias、scss 等
+-   集成了 antd UI 库
+-   支持 国际化
+-   支持使用 redux-toolkit 来进行状态管理
+-   支持使用 react-router 来管理路由
+-   集成了 Module Federation，可以输出和引入子模块
+-   使用 ESLint、husky 和 .vscode 来规范代码
 
-## node 版本
+# 开始
 
-v14.18.1
+可以使用[useful-cli](https://github.com/yucheng1207/useful-cli)创建项目模板。
 
-# 开发
+> 开发此模板时使用的 node 版本为 v14.18.1
 
-## 开发调试
+**开发调试**
 
 执行`yarn dev`命令可本地运行该项目，打开[http://localhost:3000](http://localhost:3000)可在线调试。
 
@@ -18,7 +24,7 @@ v14.18.1
 yarn dev
 ```
 
-## 编译
+**编译**
 
 执行`yarn build`可以编译项目，输出路径为`build`文件夹
 
@@ -58,7 +64,7 @@ yarn build
 	└── yarn.lock
 ```
 
-# 项目搭建
+# 项目搭建笔记
 
 ## scss 配置
 
