@@ -1,14 +1,15 @@
 # 介绍
 
-这是一个 react 前端项目模板，使用了 React 全家桶 （react + react-router + redux）搭建，项目中推荐使用 react-hook 开发组件，主要集成了以下功能：
+这是一个 React 前端项目模板，使用了 `React全家桶` （`react` + `react-router` + `redux`）搭建，项目中推荐使用 `react-hook` 开发组件，主要集成了以下功能：
 
--   自定义配置 webpack，支持 alias、scss 等
--   集成了 antd UI 库
--   支持 国际化
--   支持使用 redux-toolkit 来进行状态管理
--   支持使用 react-router 来管理路由
--   集成了 Module Federation，可以输出和引入子模块
--   使用 ESLint、husky 和 .vscode 来规范代码
+-   自定义配置 `webpack`，支持 `alias`、`scss` 等
+-   集成了 `antd` UI 库
+-   支持 `国际化`
+-   支持`typescript`
+-   支持使用 `redux-toolkit` 来进行状态管理
+-   支持使用 `react-router` 来管理路由
+-   集成了 `Module Federation`，可以输出和引入子模块
+-   使用 `ESLint`、`husky` 和 `.vscode` 来规范代码
 
 # 开始
 

@@ -1,12 +1,12 @@
 # 介绍
 
-该项目是使用 `vue-cli` 搭建的 Vue3.0 项目模板，支持以下功能，更多自定义功能待完善...
+该项目是使用 `vue-cli` 搭建的 `Vue3.0` 项目模板，支持以下功能，更多自定义功能待完善...
 
--   支持 scss
--   集成 Vue Router
--   集成 Vuex
--   集成 UI 框架 Element Plus
--   使用 Prettier + ESLint 来实现代码规范化
+-   支持 `scss`
+-   集成 `Vue Router` 管理路由
+-   集成 `Vuex` 管理状态
+-   集成 UI 框架 `Element Plus`
+-   使用 `Prettier` + `ESLint` 来实现代码规范化
 
 # 开始
 

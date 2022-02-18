@@ -7,9 +7,9 @@
 -   支持`scss 预编译`
 -   支持`设置环境变量`
 -   支持`热更新`（执行 yarn dev 在文件被修改时会自动编译）
--   使用 Promise 封装了 wx.request，并创建了一个 httpManager 单例
--   使用 eslint + prettier + husky 规范代码格式
--   引入了 weUI 库
+-   使用 `Promise` 封装了 `wx.request`，并创建了一个 `httpManager` 单例
+-   使用 `eslint` + `prettier` + `husky` 规范代码格式
+-   引入了 `weUI` 库
 
 # Blog
 
