@@ -35,13 +35,13 @@
 -   [electron-main-app](./src/template-typescript/electron-app/electron-main-app)：这是一个 Electron 前端项目模板，渲染进程是一个最简单的静态页面，用于演示如何引入一个渲染进程项目，可以参考该静态页面的配置自行改成`vue`或`react`，主要集成了以下功能：
     -   支持使用 `webpack` 编译主进程和渲染进程代码，使用 `gulp` 编写应用调试打包脚本
     -   使用 `electron-builder` 打包应用，支持 `window`、`mac` 两个系统
-    -   支持 `应用更新` 和 `热更新`。`应用更新`即主进程代码改动时重新安装应用，`热更新`即渲染进程代码改动时在线更新渲染进程代码（不重新安装）
+    -   支持 `应用更新` 和 `热更新`。`应用更新`即主进程代码改动时重新安装应用，`热更新`即渲染进程代码改动时在线更新渲染进程代码（不需要重新安装）
     -   支持 `typescript`
     -   主进程使用 [bunyan](https://www.npmjs.com/package/bunyan) 进行日志收集
     -   主进程使用 [Nedb](https://github.com/louischatriot/nedb) 管理本地数据
     -   支持主进程和渲染进程通信
     -   支持 URL 远程启动 - `Deep Link`
-    -   主窗口加载完成前使用 `Loading` 窗口白屏和过长时间的启动等待
+    -   主窗口加载完成前使用 `Loading` 窗口避免白屏和过长时间的启动等待
     -   使用 `ESLint` 和 `.vscode` 来规范代码
 
 ## 查看当前版本
@@ -50,7 +50,7 @@
     npx useful-cli -v
 ```
 
-## 通过脚手架安装项目
+## 通过脚手架创建项目
 
 ```
     npx useful-cli create <app-name>
